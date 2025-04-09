@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 
-class ManuBar extends StatelessWidget {
-  const ManuBar({super.key});
+class MenuList extends StatelessWidget {
+  final bool isTablet;
+  const MenuList({super.key, required this.isTablet});
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     return Row(
       children: [
         IconButton(

@@ -4,6 +4,7 @@ import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 import 'package:temp_noti/src/constants/color.dart';
 import 'package:temp_noti/src/configs/url.dart';
+import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/models/users.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/home/filter.dart';
@@ -23,6 +24,7 @@ class HomePage extends StatelessWidget {
     final api = Api();
     final configStorage = ConfigStorage();
     bool isFirst = false;
+    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
 
     return FutureBuilder<UserData?>(
       future: api.getUser(),
@@ -79,14 +81,12 @@ class HomePage extends StatelessWidget {
               child: CustomAppbar(
                 titleInfo: Column(
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [TitleName(), ManuBar()],
+                      children: [TitleName(isTablet: isTablet), MenuList(isTablet: isTablet)],
                     ),
                     const SizedBox(height: 8),
-                    snapshot.data!.role! == "USER" || snapshot.data!.role! == "LEGACY_USER" || snapshot.data!.role! == "GUEST"
-                        ? const SizedBox(height: 0)
-                        : const FilterBox(),
+                    const FilterBox()
                   ],
                 ),
               ),
@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             body: Container(
               decoration: ConstColor.bgColor,
-              child: const Center(child: CircularProgressIndicator(color: Colors.white70)),
+              child: const Center(child: TextInputStyle.loading),
             ),
           );
         }

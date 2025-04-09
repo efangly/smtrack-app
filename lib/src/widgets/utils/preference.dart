@@ -150,9 +150,9 @@ class ConfigStorage {
 
   Future<void> clearTokens() async {
     final prefs = await SharedPreferences.getInstance();
+    await setNotification(false);
+    await setDoorNotification(false);
+    await setLegacyNotification(false);
     await prefs.clear();
-    setNotification(false);
-    setDoorNotification(false);
-    setLegacyNotification(false);
   }
 }

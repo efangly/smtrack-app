@@ -15,11 +15,13 @@ class _NotiSettingPageState extends State<NotiSettingPage> {
   bool notification = false;
   bool door = false;
   bool legacy = false;
+  String role = "";
 
   Future<void> loadValue() async {
     notification = await configStorage.getNotificationStatus() ?? false;
     door = await configStorage.getDoorStatus() ?? false;
     legacy = await configStorage.getLegacyStatus() ?? false;
+    role = await configStorage.getRole() ?? "";
     setState(() {});
   }
 
@@ -82,49 +84,53 @@ class _NotiSettingPageState extends State<NotiSettingPage> {
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("แจ้งเตือนประตู", style: style),
-                Switch(
-                  value: door,
-                  onChanged: (bool value) {
-                    if (value) {
-                      configStorage.setDoorNotification(true);
-                    } else {
-                      configStorage.setDoorNotification(false);
-                    }
-                    setState(() => door = value);
-                  },
-                  activeColor: Colors.green[800],
-                  activeTrackColor: Colors.green[400],
-                  inactiveThumbColor: Colors.grey[600],
-                  inactiveTrackColor: Colors.white70,
-                ),
-              ],
-            ),
+            role != "LEGACY_USER" || role != "LEGACY_ADMIN"
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("แจ้งเตือนประตู", style: style),
+                      Switch(
+                        value: door,
+                        onChanged: (bool value) {
+                          if (value) {
+                            configStorage.setDoorNotification(true);
+                          } else {
+                            configStorage.setDoorNotification(false);
+                          }
+                          setState(() => door = value);
+                        },
+                        activeColor: Colors.green[800],
+                        activeTrackColor: Colors.green[400],
+                        inactiveThumbColor: Colors.grey[600],
+                        inactiveTrackColor: Colors.white70,
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
             const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("แจ้งเตือนระบบ Line", style: style),
-                Switch(
-                  value: legacy,
-                  onChanged: (bool value) {
-                    if (value) {
-                      configStorage.setLegacyNotification(true);
-                    } else {
-                      configStorage.setLegacyNotification(false);
-                    }
-                    setState(() => legacy = value);
-                  },
-                  activeColor: Colors.green[800],
-                  activeTrackColor: Colors.green[400],
-                  inactiveThumbColor: Colors.grey[600],
-                  inactiveTrackColor: Colors.white70,
-                ),
-              ],
-            ),
+            role == "SERVICE" || role == "SUPER"
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("แจ้งเตือนระบบ Line", style: style),
+                      Switch(
+                        value: legacy,
+                        onChanged: (bool value) {
+                          if (value) {
+                            configStorage.setLegacyNotification(true);
+                          } else {
+                            configStorage.setLegacyNotification(false);
+                          }
+                          setState(() => legacy = value);
+                        },
+                        activeColor: Colors.green[800],
+                        activeTrackColor: Colors.green[400],
+                        inactiveThumbColor: Colors.grey[600],
+                        inactiveTrackColor: Colors.white70,
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

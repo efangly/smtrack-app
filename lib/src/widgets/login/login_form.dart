@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/configs/url.dart';
+import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/login/input.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
@@ -91,8 +92,8 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         Container(
-          width: 150,
-          height: 50,
+          width: 200,
+          height: 55,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
             boxShadow: [
@@ -108,10 +109,20 @@ class _LoginFormState extends State<LoginForm> {
           ),
           child: TextButton.icon(
             onPressed: () async => submitLogin(),
-            icon: const FaIcon(FontAwesomeIcons.userCheck, size: 25.0, color: Colors.white60),
+            icon: isLogin
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: TextInputStyle.loading,
+                  )
+                : const FaIcon(
+                    FontAwesomeIcons.userCheck,
+                    size: 25.0,
+                    color: Colors.white60,
+                  ),
             label: Text(
               loginBtnText,
-              style: const TextStyle(color: Colors.white70, fontSize: 22.0, fontWeight: FontWeight.w700),
+              style: TextStyle(color: isLogin ? Colors.white54 : Colors.white70, fontSize: 22.0, fontWeight: FontWeight.w700),
             ),
           ),
         ),

@@ -108,14 +108,14 @@ class Api {
             topic = "admin";
             break;
         }
-        await _tokenStorage.saveUser(user.data!.id!, topic);
+        await _tokenStorage.saveUser(user.data!.id!, user.data!.role!);
         await _tokenStorage.saveTopic(topic, "$topic-door");
         if (user.data!.role == "SERVICE" || user.data!.role == "SUPER") {
           await _tokenStorage.saveLegacyTopic("$topic-legacy");
           _tokenStorage.setLegacyNotification(true);
         }
-        _tokenStorage.setNotification(true);
-        _tokenStorage.setDoorNotification(true);
+        await _tokenStorage.setNotification(true);
+        await _tokenStorage.setDoorNotification(true);
         return user;
       } else {
         throw Exception('Failed to login');

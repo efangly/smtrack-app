@@ -33,7 +33,7 @@ class SettingPage extends StatelessWidget {
                 style: TextButton.styleFrom(backgroundColor: Colors.white60),
                 child: const Text('ออกจากระบบ', style: TextStyle(color: Color.fromARGB(255, 255, 17, 0))),
                 onPressed: () async {
-                  await configStorage.clearTokens();
+                  configStorage.clearTokens();
                   if (context.mounted) {
                     context.read<UsersBloc>().add(RemoveUser());
                     context.read<DevicesBloc>().add(ClearDevices());

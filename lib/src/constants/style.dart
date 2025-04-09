@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TextInputStyle {
+  static const CircularProgressIndicator loading = CircularProgressIndicator(
+    color: Colors.white70,
+    backgroundColor: Color.fromARGB(255, 0, 94, 236),
+    strokeWidth: 2,
+  );
   static const inputStyle = TextStyle(
     fontWeight: FontWeight.w500,
     color: Colors.white70,

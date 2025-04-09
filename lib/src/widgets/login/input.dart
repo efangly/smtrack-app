@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class InputForm extends StatelessWidget {
   final TextEditingController username;
@@ -22,7 +21,6 @@ class InputForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Username',
               labelStyle: textStyle(),
-              icon: FaIcon(FontAwesomeIcons.userLock, size: 25.0, color: _color),
               focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
               enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
             ),
@@ -36,7 +34,6 @@ class InputForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Password',
               labelStyle: textStyle(),
-              icon: FaIcon(FontAwesomeIcons.lock, size: 25.0, color: _color),
               focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
               enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
             ),

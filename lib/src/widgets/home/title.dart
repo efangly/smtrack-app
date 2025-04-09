@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 
 class TitleName extends StatelessWidget {
-  const TitleName({super.key});
-
+  final bool isTablet;
+  const TitleName({super.key, required this.isTablet});
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, state) {
         return Row(

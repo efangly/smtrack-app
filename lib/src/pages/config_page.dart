@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/color.dart';
+import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/setting/probe_adj.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
@@ -69,7 +70,7 @@ class _ConfigPageState extends State<ConfigPage> with SingleTickerProviderStateM
                 Navigator.pop(context);
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: Colors.white70));
+                return const Center(child: TextInputStyle.loading);
               }
               if (snapshot.hasData) {
                 _tabController = TabController(length: snapshot.data!.probe!.length, vsync: this);
