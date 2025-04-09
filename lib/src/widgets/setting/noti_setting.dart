@@ -44,7 +44,7 @@ class NotiSetting extends StatelessWidget {
               size: isTablet ? 38 : 28,
             ),
             Text(
-              "Notification Setting",
+              "ตั้งค่าการแจ้งเตือน",
               style: TextStyle(fontSize: isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
             ),
           ],
@@ -53,7 +53,7 @@ class NotiSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(" Return to normal", style: style),
+            Text(" แจ้งอุณหภูมิกลับเข้าช่วง", style: style),
             Switch(
               value: normalMsg,
               onChanged: (bool value) => onNormalMsg(value),
@@ -68,7 +68,7 @@ class NotiSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(" Notification", style: style),
+            Text(" การแจ้งเตือน", style: style),
             Switch(
               value: notificationMsg,
               onChanged: (bool value) => onNotificationMsg(value),
@@ -83,7 +83,7 @@ class NotiSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(" First message delay", style: style),
+            Text(" หน่วงการแจ้งเตือนครั้งแรก", style: style),
             SizedBox(
               width: 85,
               height: 40,
@@ -108,7 +108,7 @@ class NotiSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(" Repeat", style: style),
+            Text(" แจ้งเตือนซ้ำ", style: style),
             SizedBox(
               width: isTablet ? 100 : 85,
               height: 40,

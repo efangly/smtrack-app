@@ -8,12 +8,44 @@ sealed class UsersEvent extends Equatable {
 }
 
 class SetUser extends UsersEvent {
-  final String displayName;
-  final String userPic;
+  final String display;
+  final String pic;
   final String role;
-  final String userId;
+  final String id;
+  final String username;
 
-  const SetUser(this.displayName, this.userPic, this.role, this.userId);
+  const SetUser(this.display, this.pic, this.role, this.id, this.username);
+
+  @override
+  List<Object> get props => [display, pic, role, id];
+}
+
+class SetHospitalData extends UsersEvent {
+  final String hospitalId;
+  final String wardId;
+  final String wardType;
+  const SetHospitalData(this.hospitalId, this.wardId, this.wardType);
+
+  @override
+  List<Object> get props => [hospitalId, wardId, wardType];
+}
+
+class SetWardData extends UsersEvent {
+  final List<Ward> wards;
+  const SetWardData(this.wards);
+
+  @override
+  List<Object> get props => [wards];
+}
+
+class SetError extends UsersEvent {
+  final bool error;
+  const SetError(this.error);
+
+  @override
+  List<Object> get props => [error];
 }
 
 class RemoveUser extends UsersEvent {}
+
+class LoadHospital extends UsersEvent {}

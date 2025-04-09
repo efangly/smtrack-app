@@ -1,30 +1,75 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:temp_noti/src/models/models.dart';
+import 'package:temp_noti/src/models/devices.dart';
+import 'package:temp_noti/src/models/legacy_device.dart';
+import 'package:temp_noti/src/models/log.dart';
+import 'package:temp_noti/src/services/services.dart';
 
 part 'devices_event.dart';
 part 'devices_state.dart';
 
 class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
+  final api = Api();
   DevicesBloc() : super(const DevicesState()) {
-    on<GetAllDevices>((event, emit) async {
-      emit(state.copyWith(devices: event.devices));
-    });
-
-    on<SetHospitalData>((event, emit) {
-      emit(state.copyWith(hospitalId: event.hospitalId, wardId: event.wardId));
-    });
-
-    on<SetWardData>((event, emit) {
-      emit(state.copyWith(wards: event.wards));
-    });
-
-    on<ClearDevices>((event, emit) {
-      emit(state.copyWith(devices: [], wards: [], wardId: "", hospitalId: ""));
-    });
-
+    on<GetDevices>(_getDevices);
+    on<GetLegacyDevices>(_getLegacyDevices);
+    on<GetDeviceById>(_getDeviceById);
+    on<ClearDevices>(_clearDevices);
+    on<ClearDevice>(_clearDevice);
     on<DeviceError>((event, emit) {
       emit(state.copyWith(isError: event.error));
     });
+  }
+
+  Future<void> _getDevices(event, emit) async {
+    try {
+      final response = await api.getDevice(event.ward);
+      emit(state.copyWith(devices: response));
+    } on Exception catch (e) {
+      emit(state.copyWith(isError: true));
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _getDeviceById(event, emit) async {
+    try {
+      final response = await api.getDeviceById(event.id);
+      emit(state.copyWith(device: response));
+    } on Exception catch (e) {
+      emit(state.copyWith(isError: true));
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _getLegacyDevices(event, emit) async {
+    try {
+      final response = await api.getLegacyDevice(event.ward);
+      emit(state.copyWith(legacyDevice: response));
+    } on Exception catch (e) {
+      emit(state.copyWith(isError: true));
+      if (kDebugMode) print(e);
+    }
+  }
+
+  Future<void> _clearDevices(event, emit) async {
+    emit(state.copyWith(devices: []));
+  }
+
+  Future<void> _clearDevice(event, emit) async {
+    DeviceId? device = DeviceId(
+      hospital: "",
+      hospitalName: "",
+      id: "",
+      name: "",
+      online: false,
+      position: "",
+      staticName: "",
+      status: false,
+      ward: "",
+      wardName: "",
+      probe: const [],
+    );
+    emit(state.copyWith(device: device));
   }
 }

@@ -28,21 +28,23 @@ class Notifications {
 }
 
 class NotiList {
-  String? notiId;
-  String? devSerial;
-  String? notiDetail;
-  bool? notiStatus;
+  String? id;
+  String? serial;
+  String? message;
+  String? detail;
+  bool? status;
   String? createAt;
   String? updateAt;
   NotiDevice? device;
 
-  NotiList({this.notiId, this.devSerial, this.notiDetail, this.notiStatus, this.createAt, this.updateAt, this.device});
+  NotiList({this.id, this.serial, this.message, this.detail, this.status, this.createAt, this.updateAt, this.device});
 
   NotiList.fromJson(Map<String, dynamic> json) {
-    notiId = json['notiId'];
-    devSerial = json['devSerial'];
-    notiDetail = json['notiDetail'];
-    notiStatus = json['notiStatus'];
+    id = json['id'];
+    serial = json['serial'];
+    message = json['message'];
+    detail = json['detail'];
+    status = json['status'];
     createAt = json['createAt'];
     updateAt = json['updateAt'];
     device = json['device'] != null ? NotiDevice.fromJson(json['device']) : null;
@@ -50,10 +52,11 @@ class NotiList {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['notiId'] = notiId;
-    data['devSerial'] = devSerial;
-    data['notiDetail'] = notiDetail;
-    data['notiStatus'] = notiStatus;
+    data['id'] = id;
+    data['serial'] = serial;
+    data['message'] = message;
+    data['detail'] = detail;
+    data['status'] = status;
     data['createAt'] = createAt;
     data['updateAt'] = updateAt;
     if (device != null) {
@@ -64,26 +67,23 @@ class NotiList {
 }
 
 class NotiDevice {
-  String? devId;
-  String? devName;
-  String? devSerial;
-  String? devDetail;
+  String? name;
+  String? hospital;
+  String? ward;
 
-  NotiDevice({this.devId, this.devName, this.devSerial});
+  NotiDevice({this.name, this.hospital, this.ward});
 
   NotiDevice.fromJson(Map<String, dynamic> json) {
-    devId = json['devId'];
-    devName = json['devName'];
-    devSerial = json['devSerial'];
-    devDetail = json['devDetail'];
+    name = json['name'];
+    hospital = json['hospital'];
+    ward = json['ward'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['devId'] = devId;
-    data['devName'] = devName;
-    data['devSerial'] = devSerial;
-    data['devDetail'] = devDetail;
+    data['name'] = name;
+    data['hospital'] = hospital;
+    data['ward'] = ward;
     return data;
   }
 }

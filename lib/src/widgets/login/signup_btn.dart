@@ -12,7 +12,7 @@ class SignupButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            "Don't have an account? ",
+            "ยังไม่มีบัญชี? ",
             style: TextStyle(fontSize: 18, color: Colors.white60),
           ),
           TextButton(
@@ -26,7 +26,7 @@ class SignupButton extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: const Text(
-              "Sign up",
+              "สร้างบัญชี",
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white60,

@@ -71,7 +71,7 @@ class ScheduleSetting extends StatelessWidget {
           children: [
             Icon(Icons.schedule, color: Colors.white70, size: isTablet ? 38 : 28),
             Text(
-              " Notification Schedule",
+              " ตั้งค่าเวลาแจ้งรีพอร์ต",
               style: TextStyle(fontSize: isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
             ),
           ],
@@ -80,10 +80,10 @@ class ScheduleSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Day", style: style),
+            Text("วันที่", style: style),
             Row(
               children: [
-                Text("All day ", style: style),
+                Text("ทุกวัน ", style: style),
                 Switch(
                   value: isAllDay,
                   onChanged: (bool value) {
@@ -113,7 +113,7 @@ class ScheduleSetting extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("First Day", style: style),
+                Text("วันที่แรก", style: style),
                 const SizedBox(height: 5),
                 DropdownMenu(
                   enabled: !isAllDay,
@@ -136,7 +136,7 @@ class ScheduleSetting extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Second Day", style: style),
+                Text("วันที่สอง", style: style),
                 const SizedBox(height: 5),
                 DropdownMenu(
                   enabled: !isAllDay,
@@ -159,7 +159,7 @@ class ScheduleSetting extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Third Day", style: style),
+                Text("วันที่สาม", style: style),
                 const SizedBox(height: 5),
                 DropdownMenu(
                   enabled: !isAllDay,
@@ -181,12 +181,12 @@ class ScheduleSetting extends StatelessWidget {
           ],
         ),
         SizedBox(height: isTablet ? 15 : 10),
-        Text("Time", style: style),
+        Text("เวลา", style: style),
         SizedBox(height: isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("First Time: ", style: style),
+            Text("ช่วงเวลาที่หนึ่ง ", style: style),
             Row(
               children: [
                 DropdownMenu(
@@ -227,7 +227,7 @@ class ScheduleSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Second Time: ", style: style),
+            Text("ช่วงเวลาที่สอง ", style: style),
             Row(
               children: [
                 DropdownMenu(
@@ -268,7 +268,7 @@ class ScheduleSetting extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Third Time: ", style: style),
+            Text("ช่วงเวลาที่สาม ", style: style),
             Row(
               children: [
                 DropdownMenu(

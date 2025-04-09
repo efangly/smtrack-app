@@ -1,10 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 import 'package:temp_noti/src/constants/color.dart';
@@ -12,6 +10,8 @@ import 'package:temp_noti/src/models/models.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
+import 'package:temp_noti/src/widgets/utils/preference.dart';
+import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -25,14 +25,34 @@ class _UserPageState extends State<UserPage> {
   late TextEditingController oldPasswordController;
   late TextEditingController newPasswordController;
   late TextEditingController confirmPasswordController;
+  final api = Api();
+  final configStorage = ConfigStorage();
   final formKey = GlobalKey<FormState>();
   bool isSubmit = false;
 
   String? checkEmpty(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter some text';
+      return 'โปรดกรอกข้อมูล';
     }
     return null;
+  }
+
+  Future<void> removeAccount(BuildContext context, String id) async {
+    try {
+      await api.deleteUser(id);
+      await configStorage.clearTokens();
+      if (context.mounted) {
+        context.read<DevicesBloc>().add(ClearDevices());
+        context.read<UsersBloc>().add(RemoveUser());
+        Navigator.of(context).pop();
+        Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) print(e.toString());
+      if (context.mounted) {
+        ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถลบบัญชีได้");
+      }
+    }
   }
 
   @override
@@ -69,7 +89,7 @@ class _UserPageState extends State<UserPage> {
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(Icons.arrow_back, size: isTablet ? 40 : 30, color: Colors.white60),
               ),
-              Text('Account', style: TextStyle(fontSize: isTablet ? 24 : 20, fontWeight: FontWeight.w900)),
+              Text('บัญชี', style: TextStyle(fontSize: isTablet ? 24 : 20, fontWeight: FontWeight.w900)),
               const SizedBox(width: 35),
             ],
           ),
@@ -84,7 +104,7 @@ class _UserPageState extends State<UserPage> {
             width: 600,
             child: BlocBuilder<UsersBloc, UsersState>(
               builder: (context, state) {
-                displayController.text = state.displayName;
+                displayController.text = state.display;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -94,8 +114,12 @@ class _UserPageState extends State<UserPage> {
                         FaIcon(FontAwesomeIcons.userGroup, size: isTablet ? 38 : 28, color: Colors.white70),
                         const SizedBox(width: 8),
                         Text(
-                          "Display Name",
-                          style: TextStyle(fontSize: isTablet ? 24 : 20, fontWeight: FontWeight.bold, color: Colors.white70),
+                          "ชื่อที่แสดง",
+                          style: TextStyle(
+                            fontSize: isTablet ? 24 : 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70,
+                          ),
                         ),
                       ],
                     ),
@@ -112,20 +136,24 @@ class _UserPageState extends State<UserPage> {
                             if (isSubmit) return;
                             if (displayController.text != "") {
                               isSubmit = true;
-                              UserData user = UserData(displayName: displayController.text);
+                              UserData user = UserData(display: displayController.text);
                               try {
-                                bool? response = await Api.updateUser(state.userId, user);
+                                bool? response = await api.updateUser(state.id, user);
                                 if (response && context.mounted) {
-                                  context.read<UsersBloc>().add(SetUser(displayController.text, state.userPic, state.role, state.userId));
+                                  context
+                                      .read<UsersBloc>()
+                                      .add(SetUser(displayController.text, state.pic, state.role, state.id, state.username));
                                   isSubmit = false;
-                                  UtilsApp.showSnackBar(context, ContentType.success, "Success", "Display name updated");
+                                  ShowSnackbar.snackbar(ContentType.success, "สำเร็จ", "แก้ไขชื่อที่แสดงสำเร็จ");
                                 }
                               } catch (e) {
                                 if (kDebugMode) print(e.toString());
-                                if (context.mounted) UtilsApp.pushToLogin(context);
+                                if (context.mounted) {
+                                  ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถแก้ไขชื่อที่แสดงได้");
+                                }
                               }
                             } else {
-                              if (context.mounted) UtilsApp.showSnackBar(context, ContentType.failure, "Error", "Please enter some text");
+                              if (context.mounted) ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "โปรดกรอกชื่อที่แสดง");
                             }
                           },
                           icon: FaIcon(FontAwesomeIcons.pencil, size: isTablet ? 38 : 28, color: Colors.white70),
@@ -138,7 +166,7 @@ class _UserPageState extends State<UserPage> {
                         FaIcon(FontAwesomeIcons.userLock, size: isTablet ? 38 : 28, color: Colors.white70),
                         const SizedBox(width: 8),
                         Text(
-                          "Change Password",
+                          "แก้ไขรหัสผ่าน",
                           style: TextStyle(fontSize: isTablet ? 24 : 20, fontWeight: FontWeight.bold, color: Colors.white70),
                         ),
                       ],
@@ -155,7 +183,7 @@ class _UserPageState extends State<UserPage> {
                             validator: checkEmpty,
                             style: TextStyle(fontSize: isTablet ? 26 : 20, fontWeight: FontWeight.w500, color: Colors.white70),
                             decoration: InputDecoration(
-                              labelText: "Password",
+                              labelText: "รหัสผ่านเดิม",
                               labelStyle: labelStyle,
                               contentPadding: const EdgeInsets.only(left: 8, top: 15),
                               helperStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white70),
@@ -169,7 +197,7 @@ class _UserPageState extends State<UserPage> {
                             validator: checkEmpty,
                             style: TextStyle(fontSize: isTablet ? 26 : 20, fontWeight: FontWeight.w500, color: Colors.white70),
                             decoration: InputDecoration(
-                              labelText: "New password",
+                              labelText: "รหัสผ่านใหม่",
                               labelStyle: labelStyle,
                               contentPadding: const EdgeInsets.only(left: 8, top: 15),
                               helperStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white70),
@@ -183,7 +211,7 @@ class _UserPageState extends State<UserPage> {
                             validator: checkEmpty,
                             style: TextStyle(fontSize: isTablet ? 26 : 20, fontWeight: FontWeight.w500, color: Colors.white70),
                             decoration: InputDecoration(
-                              labelText: "Confirm password",
+                              labelText: "ยืนยันรหัสผ่าน",
                               labelStyle: labelStyle,
                               contentPadding: const EdgeInsets.only(left: 8, top: 15),
                               helperStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white70),
@@ -199,7 +227,7 @@ class _UserPageState extends State<UserPage> {
                                     try {
                                       if (newPasswordController.text != confirmPasswordController.text) {
                                         if (context.mounted) {
-                                          UtilsApp.showSnackBar(context, ContentType.failure, "Error", "Password not match");
+                                          ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "รหัสผ่านไม่ตรงกัน");
                                         }
                                         return;
                                       }
@@ -208,26 +236,20 @@ class _UserPageState extends State<UserPage> {
                                         oldPassword: oldPasswordController.text,
                                         password: newPasswordController.text,
                                       );
-                                      final response = await Api.changPass(state.userId, changePassword);
+                                      final response = await api.changPass(state.username, changePassword);
                                       if (response && context.mounted) {
                                         isSubmit = false;
                                         oldPasswordController.clear();
                                         newPasswordController.clear();
                                         confirmPasswordController.clear();
                                         formKey.currentState!.reset();
-                                        UtilsApp.showSnackBar(context, ContentType.success, "Success", "Password changed");
+                                        ShowSnackbar.snackbar(ContentType.success, "สำเร็จ", "แก้ไขรหัสผ่านสำเร็จ");
                                       }
                                     } catch (e) {
                                       isSubmit = false;
                                       if (kDebugMode) print(e.toString());
-                                      if (e is DioException) {
-                                        if (context.mounted) {
-                                          if (e.response!.statusCode == 401) {
-                                            if (context.mounted) UtilsApp.pushToLogin(context);
-                                          } else {
-                                            UtilsApp.showSnackBar(context, ContentType.failure, "Error", "Incorrect password");
-                                          }
-                                        }
+                                      if (context.mounted) {
+                                        ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถแก้ไขรหัสผ่านได้");
                                       }
                                     }
                                   }
@@ -241,7 +263,7 @@ class _UserPageState extends State<UserPage> {
                                   ),
                                 ),
                                 label: Text(
-                                  "Change",
+                                  "แก้ไข",
                                   style: TextStyle(fontSize: isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold),
                                 ),
                                 icon: FaIcon(FontAwesomeIcons.key, size: isTablet ? 38 : 28, color: Colors.white70),
@@ -250,7 +272,7 @@ class _UserPageState extends State<UserPage> {
                               TextButton.icon(
                                 onPressed: () => formKey.currentState!.reset(),
                                 label: Text(
-                                  "Clear",
+                                  "ล้าง",
                                   style: TextStyle(fontSize: isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold),
                                 ),
                                 icon: FaIcon(FontAwesomeIcons.trash, size: isTablet ? 38 : 28, color: Colors.white70),
@@ -276,38 +298,19 @@ class _UserPageState extends State<UserPage> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Remove account', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
-                              content: const Text('Are you sure?', style: TextStyle(color: Colors.white)),
+                              title: const Text('ลบบัญชี', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
+                              content: const Text('คุณต้องการที่จะลบบัญชี?', style: TextStyle(color: Colors.white)),
                               backgroundColor: const Color.fromARGB(255, 0, 77, 192),
                               actions: [
                                 TextButton(
                                   style: TextButton.styleFrom(backgroundColor: Colors.white60),
-                                  child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+                                  child: const Text('ยกเลิก', style: TextStyle(color: Colors.black)),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                                 TextButton(
                                   style: TextButton.styleFrom(backgroundColor: Colors.white60),
-                                  child: const Text('Remove', style: TextStyle(color: Color.fromARGB(255, 255, 17, 0))),
-                                  onPressed: () async {
-                                    try {
-                                      await Api.deleteUser(state.userId);
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      String? topic = prefs.getString('topic');
-                                      if (topic != null) await FirebaseApi().unSubscribeTopic(topic);
-                                      await prefs.clear();
-                                      if (context.mounted) {
-                                        context.read<DevicesBloc>().add(ClearDevices());
-                                        context.read<UsersBloc>().add(RemoveUser());
-                                        Navigator.of(context).pop();
-                                        Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
-                                      }
-                                    } on Exception catch (e) {
-                                      if (kDebugMode) print(e.toString());
-                                      if (context.mounted) {
-                                        UtilsApp.showSnackBar(context, ContentType.failure, "Error", "Failed to remove account");
-                                      }
-                                    }
-                                  },
+                                  child: const Text('ลบ', style: TextStyle(color: Color.fromARGB(255, 255, 17, 0))),
+                                  onPressed: () async => await removeAccount(context, state.id),
                                 ),
                               ],
                             );
@@ -315,7 +318,7 @@ class _UserPageState extends State<UserPage> {
                         );
                       },
                       label: Text(
-                        'Remove account',
+                        'ลบบัญชี',
                         style: TextStyle(
                           fontSize: isTablet ? 24 : 18,
                           fontWeight: FontWeight.bold,

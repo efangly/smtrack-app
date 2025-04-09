@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
-import 'package:temp_noti/src/constants/url.dart';
 
 class TitleName extends StatelessWidget {
   const TitleName({super.key});
@@ -25,7 +24,7 @@ class TitleName extends StatelessWidget {
                 child: SizedBox.fromSize(
                   size: Size.fromRadius(isTablet ? 28 : 18),
                   child: Image.network(
-                    "${URL.BASE_URL}${state.userPic}",
+                    state.pic,
                     fit: BoxFit.cover,
                     height: 50,
                     scale: 0.7,
@@ -36,7 +35,7 @@ class TitleName extends StatelessWidget {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.5,
               child: Text(
-                state.displayName,
+                state.display,
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: isTablet ? 28 : 22,

@@ -7,10 +7,15 @@ sealed class NotificationsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetAllNotifications extends NotificationsEvent {
-  final List<NotiList> notification;
-  const GetAllNotifications(this.notification);
+class GetAllNotifications extends NotificationsEvent {}
+
+class GetLegacyNotifications extends NotificationsEvent {}
+
+class NotificationError extends NotificationsEvent {
+  final bool error;
+
+  const NotificationError(this.error);
 
   @override
-  List<Object> get props => [notification];
+  List<Object> get props => [error];
 }

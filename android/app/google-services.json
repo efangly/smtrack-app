@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "688422454433",
-    "project_id": "temp-alarm",
-    "storage_bucket": "temp-alarm.appspot.com"
+    "project_number": "817583103540",
+    "project_id": "smtemp-f7de5",
+    "storage_bucket": "smtemp-f7de5.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:688422454433:android:f3356a022e4ca16243dce0",
+        "mobilesdk_app_id": "1:817583103540:android:9194af9ed4d8ab37ca7461",
         "android_client_info": {
           "package_name": "com.thanes.temp_noti"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD8fuE4M9iVRrAeEE4_cAavCryc4Sv1Xao"
+          "current_key": "AIzaSyBRXO8LWimAaGzbyKoLzHiGqtUTeiBiUOU"
         }
       ],
       "services": {

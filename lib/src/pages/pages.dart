@@ -1,12 +1,12 @@
 export 'home_page.dart';
 export 'login_page.dart';
-export 'detail_page.dart';
-export 'noti_page.dart';
-export 'config_page.dart';
-export 'register_page.dart';
 export 'device_page.dart';
+export 'notification_page.dart';
+export 'register_page.dart';
+export 'config_page.dart';
 export 'error_page.dart';
 export 'setting_page.dart';
 export 'privacy_page.dart';
 export 'condition_page.dart';
 export 'user_page.dart';
+export 'legacy_page.dart';

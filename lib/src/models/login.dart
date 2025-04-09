@@ -22,57 +22,45 @@ class Login {
 
 class Data {
   String? token;
-  String? userId;
+  String? refreshToken;
+  String? id;
   String? hosId;
   String? wardId;
-  String? userLevel;
-  String? hosPic;
-  String? hosName;
-  bool? userStatus;
-  String? userName;
-  String? displayName;
-  String? userPic;
+  String? role;
+  String? name;
+  String? pic;
 
   Data(
       {required this.token,
-      required this.userId,
+      required this.refreshToken,
+      required this.id,
       required this.hosId,
       required this.wardId,
-      required this.userLevel,
-      required this.hosPic,
-      required this.hosName,
-      required this.userStatus,
-      required this.userName,
-      required this.displayName,
-      required this.userPic});
+      required this.role,
+      required this.name,
+      required this.pic});
 
   Data.fromJson(Map<String, dynamic> json) {
     token = json['token'];
-    userId = json['userId'];
+    refreshToken = json['refreshToken'];
+    id = json['id'];
     hosId = json['hosId'];
     wardId = json['wardId'];
-    userLevel = json['userLevel'];
-    hosPic = json['hosPic'];
-    hosName = json['hosName'];
-    userStatus = json['userStatus'];
-    userName = json['userName'];
-    displayName = json['displayName'];
-    userPic = json['userPic'];
+    role = json['role'];
+    name = json['name'];
+    pic = json['pic'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['token'] = token;
-    data['userId'] = userId;
+    data['refreshToken'] = refreshToken;
+    data['id'] = id;
     data['hosId'] = hosId;
     data['wardId'] = wardId;
-    data['userLevel'] = userLevel;
-    data['hosPic'] = hosPic;
-    data['hosName'] = hosName;
-    data['userStatus'] = userStatus;
-    data['userName'] = userName;
-    data['displayName'] = displayName;
-    data['userPic'] = userPic;
+    data['role'] = role;
+    data['name'] = name;
+    data['pic'] = pic;
     return data;
   }
 }

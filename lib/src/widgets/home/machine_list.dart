@@ -1,116 +1,93 @@
 import 'dart:async';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
-import 'package:temp_noti/src/bloc/notification/notifications_bloc.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
-import 'package:temp_noti/src/constants/url.dart';
-import 'package:temp_noti/src/models/models.dart';
-import 'package:temp_noti/src/services/services.dart';
+import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/widgets/home/subtitle_list.dart';
+import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
-class MachineList extends StatelessWidget {
+class MachineList extends StatefulWidget {
   const MachineList({super.key});
+
+  @override
+  State<MachineList> createState() => _MachineListState();
+}
+
+class _MachineListState extends State<MachineList> {
+  Timer? _timer;
+  String ward = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      context.read<DevicesBloc>().add(GetDevices(ward));
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
-    Future<void> refreshData() async {
-      try {
-        List<DeviceList> device = await Api.getDevice();
-        List<NotiList> noti = await Api.getNotification();
-        if (context.mounted) {
-          context.read<DevicesBloc>().add(GetAllDevices(device));
-          context.read<NotificationsBloc>().add(GetAllNotifications(noti));
+    return BlocBuilder<DevicesBloc, DevicesState>(
+      builder: (context, device) {
+        if (device.isError) {
+          context.read<DevicesBloc>().add(const DeviceError(false));
+          ShowSnackbar.snackbar(ContentType.failure, "เกิดข้อผิดพลาด", "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
         }
-      } on Exception catch (e) {
-        if (kDebugMode) print(e);
-        if (context.mounted) UtilsApp.pushToLogin(context);
-      }
-      await Future.delayed(const Duration(seconds: 1));
-    }
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      try {
-        List<DeviceList> device = await Api.getDevice();
-        List<NotiList> noti = await Api.getNotification();
-        if (context.mounted) {
-          UtilsApp.showSnackBar(
-            context,
-            ContentType.help,
-            message.notification?.title ?? "",
-            message.notification?.body ?? "",
-          );
-          context.read<DevicesBloc>().add(GetAllDevices(device));
-          context.read<NotificationsBloc>().add(GetAllNotifications(noti));
+        if (device.devices.isEmpty) {
+          return const Center(child: Text("ไม่พบอุปกรณ์", style: TextStyle(color: Colors.white70, fontSize: 20)));
         }
-      } on Exception catch (e) {
-        if (kDebugMode) print(e);
-        if (context.mounted) UtilsApp.pushToLogin(context);
-      }
-    });
-
-    return RefreshIndicator(
-      onRefresh: refreshData,
-      child: BlocBuilder<DevicesBloc, DevicesState>(builder: (context, state) {
-        List<DeviceList> devices = state.devices.where((e) => e.wardId == state.wardId).toList();
-        if (devices.isEmpty) return const Center(child: Text("No Device"));
+        ward = device.devices[0].ward ?? "";
         return ListView.separated(
-          itemCount: devices.length,
+          itemCount: device.devices.length,
           separatorBuilder: (BuildContext context, int index) => const Divider(
             color: Colors.white12,
-            height: 1,
+            height: 4,
             indent: 15,
             endIndent: 15,
           ),
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               title: Text(
-                devices[index].devDetail ?? "ไม่มีชื่อ",
+                device.devices[index].name ?? "ไม่มีชื่อ",
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: isTablet ? 22 : 16,
                 ),
               ),
               tileColor: const Color.fromARGB(255, 165, 190, 202),
-              subtitle: SubtitleList(deviceInfo: devices[index]),
+              subtitle: SubtitleList(deviceInfo: device.devices[index]),
               trailing: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                  maxWidth: 65,
-                  maxHeight: 64,
+                constraints: BoxConstraints(
+                  minWidth: isTablet ? 100 : 44,
+                  minHeight: isTablet ? 100 : 44,
+                  maxWidth: isTablet ? 100 : 65,
+                  maxHeight: isTablet ? 400 : 64,
                 ),
                 child: Image.network(
-                  "${URL.BASE_URL}${devices[index].locPic ?? "/img/default-pic.png"}",
-                  fit: BoxFit.cover,
-                  width: isTablet ? 85 : 55,
-                  height: isTablet ? 220 : 200,
+                  device.devices[index].positionPic ?? URL.DEFAULT_PIC,
+                  fit: BoxFit.fill,
+                  width: isTablet ? 200 : 55,
+                  height: isTablet ? 400 : 200,
                 ),
               ),
               onTap: (() {
                 try {
                   Navigator.pushNamed(
                     context,
-                    custom_route.Route.detail,
-                    arguments: {
-                      'id': devices[index].devId!,
-                      'serial': devices[index].devSerial!,
-                      'name': devices[index].devDetail ?? "ไม่มีชื่อ",
-                      'loc': devices[index].locInstall ?? "-",
-                      'status': devices[index].alarm ?? false,
-                      'humMin': devices[index].probe![0].humMin ?? 0,
-                      'humMax': devices[index].probe![0].humMax ?? 0,
-                      'tempMin': devices[index].probe![0].tempMin ?? 0,
-                      'tempMax': devices[index].probe![0].tempMax ?? 0,
-                    },
+                    custom_route.Route.device,
+                    arguments: {'name': device.devices[index].name!, 'serial': device.devices[index].serial!},
                   );
                 } catch (err) {
-                  UtilsApp.showSnackBar(
-                    context,
+                  ShowSnackbar.snackbar(
                     ContentType.warning,
                     "Warning",
                     "อุปกรณ์นี้ตั้งค่าไม่สำเร็จ",
@@ -120,7 +97,7 @@ class MachineList extends StatelessWidget {
             );
           },
         );
-      }),
+      },
     );
   }
 }

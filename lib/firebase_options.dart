@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD8fuE4M9iVRrAeEE4_cAavCryc4Sv1Xao',
-    appId: '1:688422454433:android:f3356a022e4ca16243dce0',
-    messagingSenderId: '688422454433',
-    projectId: 'temp-alarm',
-    storageBucket: 'temp-alarm.appspot.com',
+    apiKey: 'AIzaSyBRXO8LWimAaGzbyKoLzHiGqtUTeiBiUOU',
+    appId: '1:817583103540:android:9194af9ed4d8ab37ca7461',
+    messagingSenderId: '817583103540',
+    projectId: 'smtemp-f7de5',
+    storageBucket: 'smtemp-f7de5.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB8MqCutrb45x2sAzqIg4f6hCCIn0CbO4M',
-    appId: '1:688422454433:ios:49a2325d6d4e6a1043dce0',
-    messagingSenderId: '688422454433',
-    projectId: 'temp-alarm',
-    storageBucket: 'temp-alarm.appspot.com',
+    apiKey: 'AIzaSyBSfbU9Yl-OxKho7hd9z3UL3aGq2F9xjqk',
+    appId: '1:817583103540:ios:cd2214419fa6b3e1ca7461',
+    messagingSenderId: '817583103540',
+    projectId: 'smtemp-f7de5',
+    storageBucket: 'smtemp-f7de5.firebasestorage.app',
     iosBundleId: 'com.thanes.tempNoti.RunnerTests',
   );
 

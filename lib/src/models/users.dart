@@ -23,46 +23,46 @@ class User {
 }
 
 class UserData {
-  String? userId;
+  String? id;
   String? wardId;
-  String? userName;
-  bool? userStatus;
-  String? userLevel;
-  String? displayName;
-  String? userPic;
+  String? username;
+  bool? status;
+  String? role;
+  String? display;
+  String? pic;
   WardInfo? ward;
 
   UserData({
-    this.userId,
+    this.id,
     this.wardId,
-    this.userName,
-    this.userStatus,
-    this.userLevel,
-    this.displayName,
-    this.userPic,
+    this.username,
+    this.status,
+    this.role,
+    this.display,
+    this.pic,
     this.ward,
   });
 
   UserData.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
+    id = json['id'];
     wardId = json['wardId'];
-    userName = json['userName'];
-    userStatus = json['userStatus'];
-    userLevel = json['userLevel'];
-    displayName = json['displayName'];
-    userPic = json['userPic'];
+    username = json['username'];
+    status = json['status'];
+    role = json['role'];
+    display = json['display'];
+    pic = json['pic'];
     ward = json['ward'] != null ? WardInfo.fromJson(json['ward']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['userId'] = userId;
+    data['id'] = id;
     data['wardId'] = wardId;
-    data['userName'] = userName;
-    data['userStatus'] = userStatus;
-    data['userLevel'] = userLevel;
-    data['displayName'] = displayName;
-    data['userPic'] = userPic;
+    data['username'] = username;
+    data['status'] = status;
+    data['role'] = role;
+    data['display'] = display;
+    data['pic'] = pic;
     if (ward != null) {
       data['ward'] = ward!.toJson();
     }
@@ -71,13 +71,13 @@ class UserData {
 
   Map<String, dynamic> toJsonDisplayname() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['displayName'] = displayName;
+    data['display'] = display;
     return data;
   }
 
   Map<String, dynamic> toJsonDisble() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['userStatus'] = userStatus;
+    data['status'] = status;
     return data;
   }
 }

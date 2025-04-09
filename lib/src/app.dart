@@ -8,6 +8,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: custom_route.Route.navigatorKey,
+      scaffoldMessengerKey: custom_route.Route.scaffoldMessengerKey,
       debugShowCheckedModeBanner: false,
       initialRoute: route,
       routes: custom_route.Route.getAll(),

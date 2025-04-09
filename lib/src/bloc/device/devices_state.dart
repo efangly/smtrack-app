@@ -1,35 +1,31 @@
 part of 'devices_bloc.dart';
 
 class DevicesState extends Equatable {
-  final List<DeviceList> devices;
-  final List<Ward> wards;
-  final String hospitalId;
-  final String wardId;
+  final List<DeviceInfo> devices;
+  final List<DeviceLegacyList> legacyDevice;
+  final DeviceId? device;
   final bool isError;
   const DevicesState({
     this.devices = const [],
-    this.wards = const [],
-    this.hospitalId = '',
-    this.wardId = '',
+    this.legacyDevice = const [],
+    this.device,
     this.isError = false,
   });
 
   DevicesState copyWith({
-    List<DeviceList>? devices,
-    List<Ward>? wards,
-    String? hospitalId,
-    String? wardId,
+    List<DeviceInfo>? devices,
+    List<DeviceLegacyList>? legacyDevice,
+    DeviceId? device,
     bool? isError,
   }) {
     return DevicesState(
       devices: devices ?? this.devices,
-      wards: wards ?? this.wards,
-      hospitalId: hospitalId ?? this.hospitalId,
-      wardId: wardId ?? this.wardId,
+      legacyDevice: legacyDevice ?? this.legacyDevice,
+      device: device ?? this.device,
       isError: isError ?? this.isError,
     );
   }
 
   @override
-  List<Object> get props => [devices, hospitalId, wards, wardId, isError];
+  List<Object> get props => [devices, legacyDevice, device ?? DeviceId(), isError];
 }

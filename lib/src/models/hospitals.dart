@@ -28,12 +28,12 @@ class Hospital {
 }
 
 class HospitalData {
-  String? hosId;
+  String? id;
   String? hosName;
   String? hosAddress;
-  String? hosTelephone;
+  String? hosTel;
   String? userContact;
-  String? userTelePhone;
+  String? userTel;
   String? hosLatitude;
   String? hosLongitude;
   String? hosPic;
@@ -42,12 +42,12 @@ class HospitalData {
   List<Ward>? ward;
 
   HospitalData(
-      {this.hosId,
+      {this.id,
       this.hosName,
       this.hosAddress,
-      this.hosTelephone,
+      this.hosTel,
       this.userContact,
-      this.userTelePhone,
+      this.userTel,
       this.hosLatitude,
       this.hosLongitude,
       this.hosPic,
@@ -56,12 +56,12 @@ class HospitalData {
       this.ward});
 
   HospitalData.fromJson(Map<String, dynamic> json) {
-    hosId = json['hosId'];
+    id = json['id'];
     hosName = json['hosName'];
     hosAddress = json['hosAddress'];
-    hosTelephone = json['hosTelephone'];
+    hosTel = json['hosTel'];
     userContact = json['userContact'];
-    userTelePhone = json['userTelePhone'];
+    userTel = json['userTel'];
     hosLatitude = json['hosLatitude'];
     hosLongitude = json['hosLongitude'];
     hosPic = json['hosPic'];
@@ -77,12 +77,12 @@ class HospitalData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['hosId'] = hosId;
+    data['id'] = id;
     data['hosName'] = hosName;
     data['hosAddress'] = hosAddress;
-    data['hosTelephone'] = hosTelephone;
+    data['hosTel'] = hosTel;
     data['userContact'] = userContact;
-    data['userTelePhone'] = userTelePhone;
+    data['userTel'] = userTel;
     data['hosLatitude'] = hosLatitude;
     data['hosLongitude'] = hosLongitude;
     data['hosPic'] = hosPic;
@@ -96,30 +96,33 @@ class HospitalData {
 }
 
 class Ward {
-  String? wardId;
+  String? id;
   String? wardName;
   int? wardSeq;
   String? hosId;
+  String? type;
   String? createAt;
   String? updateAt;
 
-  Ward({this.wardId, this.wardName, this.wardSeq, this.hosId, this.createAt, this.updateAt});
+  Ward({this.id, this.wardName, this.wardSeq, this.hosId, this.type, this.createAt, this.updateAt});
 
   Ward.fromJson(Map<String, dynamic> json) {
-    wardId = json['wardId'];
+    id = json['id'];
     wardName = json['wardName'];
     wardSeq = json['wardSeq'];
     hosId = json['hosId'];
+    type = json['type'];
     createAt = json['createAt'];
     updateAt = json['updateAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['wardId'] = wardId;
+    data['id'] = id;
     data['wardName'] = wardName;
     data['wardSeq'] = wardSeq;
     data['hosId'] = hosId;
+    data['type'] = type;
     data['createAt'] = createAt;
     data['updateAt'] = updateAt;
     return data;

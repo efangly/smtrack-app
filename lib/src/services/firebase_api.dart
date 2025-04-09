@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:temp_noti/src/widgets/utils/snackbar.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class FirebaseApi {
   final firebaseMessaging = FirebaseMessaging.instance;
   String? apnsToken;
+
   Future<void> initNotifications() async {
     apnsToken = await firebaseMessaging.getAPNSToken();
     await firebaseMessaging.requestPermission(
@@ -16,6 +20,19 @@ class FirebaseApi {
       provisional: false,
       sound: true,
     );
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        print("Message: ${message.notification?.title}");
+        print("Message: ${message.notification?.body}");
+        print("Message: ${message.data.toString()}");
+      }
+      ShowSnackbar.snackbar(
+        ContentType.success,
+        message.notification?.title ?? "ไม่มีข้อมูล",
+        message.notification?.body ?? "ไม่มีข้อมูล",
+      );
+    });
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   }
 
   Future<void> subscribeTopic(String topic) async {
@@ -52,19 +69,19 @@ class FirebaseApi {
     }
   }
 
-  static Future<void> messagingBackgroundHandler(RemoteMessage message) async {
-    if (kDebugMode) {
-      print("Bg Message: ${message.notification?.title}");
-      print("Bg Message: ${message.notification?.body}");
-      print("Bg Message: ${message.data.toString()}");
-    }
-  }
-
-  static Future<void> messagingHandler(RemoteMessage message) async {
+  void onMessage(RemoteMessage message) {
     if (kDebugMode) {
       print("Message: ${message.notification?.title}");
       print("Message: ${message.notification?.body}");
       print("Message: ${message.data.toString()}");
+    }
+  }
+
+  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    if (kDebugMode) {
+      print("Bg Message: ${message.notification?.title}");
+      print("Bg Message: ${message.notification?.body}");
+      print("Bg Message: ${message.data.toString()}");
     }
   }
 }

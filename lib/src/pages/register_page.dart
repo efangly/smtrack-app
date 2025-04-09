@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/color.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
+import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -12,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final Api api = Api();
   late TextEditingController usernameController;
   late TextEditingController passwordController;
   late TextEditingController displayNameController;
@@ -20,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? checkEmpty(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter some text';
+      return 'โปรดกรอกข้อมูลให้ครบถ้วน';
     }
     return null;
   }
@@ -54,10 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back, size: 30.0, color: Colors.white60),
               ),
-              const Text(
-                "Register",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-              ),
+              const Text("ลงทะเบียน", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
               const SizedBox(width: 40),
             ],
           ),
@@ -86,12 +85,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Create your account",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                                "สร้างบัญชี",
+                                style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w900),
                               ),
                               const SizedBox(height: 10),
                               TextFormField(
@@ -101,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 style: const TextStyle(color: Colors.black54),
                                 validator: checkEmpty,
                                 decoration: const InputDecoration(
-                                  labelText: "Username",
+                                  labelText: "ชื่อผู้ใช้",
                                   labelStyle: TextStyle(color: Colors.black54),
                                   helperStyle: TextStyle(color: Colors.black54),
                                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
@@ -117,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 style: const TextStyle(color: Colors.black54),
                                 validator: checkEmpty,
                                 decoration: const InputDecoration(
-                                  labelText: "Password",
+                                  labelText: "รหัสผ่าน",
                                   labelStyle: TextStyle(color: Colors.black54),
                                   helperStyle: TextStyle(color: Colors.black54),
                                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
@@ -132,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 style: const TextStyle(color: Colors.black54),
                                 validator: checkEmpty,
                                 decoration: const InputDecoration(
-                                  labelText: "Display Name",
+                                  labelText: "ชื่อที่แสดง",
                                   labelStyle: TextStyle(color: Colors.black54),
                                   helperStyle: TextStyle(color: Colors.black54),
                                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black26)),
@@ -144,58 +139,42 @@ class _RegisterPageState extends State<RegisterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   TextButton.icon(
-                                    onPressed: isSubmit
-                                        ? null
-                                        : () async {
-                                            if (formKey.currentState!.validate()) {
-                                              try {
-                                                isSubmit = true;
-                                                final response = await Api.register(
-                                                  usernameController.text,
-                                                  passwordController.text,
-                                                  displayNameController.text,
-                                                );
-                                                if (response) {
-                                                  isSubmit = false;
-                                                  usernameController.clear();
-                                                  passwordController.clear();
-                                                  displayNameController.clear();
-                                                  formKey.currentState!.reset();
-                                                  if (context.mounted) {
-                                                    UtilsApp.showSnackBar(
-                                                      context,
-                                                      ContentType.success,
-                                                      "Success",
-                                                      "Register Success",
-                                                    );
-                                                  }
-                                                  await Future.delayed(const Duration(seconds: 2));
-                                                  if (context.mounted) Navigator.pop(context);
-                                                } else {
-                                                  setState(() {
-                                                    isSubmit = false;
-                                                    UtilsApp.showSnackBar(
-                                                      context,
-                                                      ContentType.failure,
-                                                      "Error",
-                                                      "Failed to create account",
-                                                    );
-                                                  });
-                                                }
-                                              } catch (e) {
-                                                setState(() {
-                                                  isSubmit = false;
-                                                  UtilsApp.showSnackBar(
-                                                    context,
-                                                    ContentType.failure,
-                                                    "Error",
-                                                    "Failed to create account",
-                                                  );
-                                                });
-                                              }
+                                    onPressed: () async {
+                                      if (isSubmit) return;
+                                      if (formKey.currentState!.validate()) {
+                                        try {
+                                          isSubmit = true;
+                                          final response = await api.register(
+                                            usernameController.text,
+                                            passwordController.text,
+                                            displayNameController.text,
+                                          );
+                                          if (response) {
+                                            isSubmit = false;
+                                            usernameController.clear();
+                                            passwordController.clear();
+                                            displayNameController.clear();
+                                            formKey.currentState!.reset();
+                                            if (context.mounted) {
+                                              ShowSnackbar.snackbar(ContentType.success, "สำเร็จ", "ลงทะเบียนสำเร็จ");
                                             }
-                                          },
-                                    label: const Text("Submit", style: TextStyle(color: Colors.black54)),
+                                            await Future.delayed(const Duration(seconds: 2));
+                                            if (context.mounted) Navigator.pop(context);
+                                          } else {
+                                            setState(() {
+                                              isSubmit = false;
+                                              ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถลงทะเบียนได้");
+                                            });
+                                          }
+                                        } catch (e) {
+                                          setState(() {
+                                            isSubmit = false;
+                                            ShowSnackbar.snackbar(ContentType.failure, "ผิดพลาด", "ไม่สามารถลงทะเบียนได้");
+                                          });
+                                        }
+                                      }
+                                    },
+                                    label: const Text("สร้างบัญชี", style: TextStyle(color: Colors.black54)),
                                     icon: const Icon(Icons.save, color: Colors.black54),
                                     style: TextButton.styleFrom(fixedSize: const Size.fromWidth(150)),
                                   ),
@@ -206,7 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       displayNameController.clear();
                                       formKey.currentState!.reset();
                                     },
-                                    label: const Text("Clear", style: TextStyle(color: Colors.black54)),
+                                    label: const Text("ล้าง", style: TextStyle(color: Colors.black54)),
                                     icon: const Icon(Icons.refresh, color: Colors.black54),
                                     style: TextButton.styleFrom(fixedSize: const Size.fromWidth(150)),
                                   ),

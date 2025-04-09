@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyB8MqCutrb45x2sAzqIg4f6hCCIn0CbO4M</string>
+	<string>AIzaSyBSfbU9Yl-OxKho7hd9z3UL3aGq2F9xjqk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>688422454433</string>
+	<string>817583103540</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.thanes.tempNoti.RunnerTests</string>
 	<key>PROJECT_ID</key>
-	<string>temp-alarm</string>
+	<string>smtemp-f7de5</string>
 	<key>STORAGE_BUCKET</key>
-	<string>temp-alarm.appspot.com</string>
+	<string>smtemp-f7de5.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:688422454433:ios:49a2325d6d4e6a1043dce0</string>
+	<string>1:817583103540:ios:cd2214419fa6b3e1ca7461</string>
 </dict>
 </plist>
