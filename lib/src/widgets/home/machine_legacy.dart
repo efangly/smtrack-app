@@ -16,7 +16,7 @@ class MachineLegacy extends StatefulWidget {
 
 class _MachineLegacyState extends State<MachineLegacy> {
   Timer? _timer;
-  String ward = "";
+  late String ward;
 
   @override
   void initState() {
@@ -37,66 +37,67 @@ class _MachineLegacyState extends State<MachineLegacy> {
     bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     return BlocBuilder<DevicesBloc, DevicesState>(
       builder: (context, device) {
+        ward = device.wardId;
         if (device.isError) {
           context.read<DevicesBloc>().add(const DeviceError(false));
           ShowSnackbar.snackbar(ContentType.failure, "เกิดข้อผิดพลาด", "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
         }
         if (device.legacyDevice.isEmpty) {
-          const Center(child: Text("ไม่พบอุปกรณ์", style: TextStyle(color: Colors.white70, fontSize: 20)));
+          return const Center(child: Text("ไม่พบอุปกรณ์", style: TextStyle(color: Colors.white70, fontSize: 20)));
+        } else {
+          return ListView.separated(
+            itemCount: device.legacyDevice.length,
+            separatorBuilder: (BuildContext context, int index) => const Divider(
+              color: Colors.white12,
+              height: 4,
+              indent: 15,
+              endIndent: 15,
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(
+                  device.legacyDevice[index].name ?? "ไม่มีชื่อ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: isTablet ? 22 : 16,
+                  ),
+                ),
+                tileColor: const Color.fromARGB(255, 165, 190, 202),
+                subtitle: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const SizedBox(width: 2),
+                    Text(
+                      device.legacyDevice[index].sn!,
+                      style: TextStyle(fontSize: isTablet ? 20 : 14),
+                    ),
+                  ],
+                ),
+                trailing: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minWidth: 44,
+                    minHeight: 44,
+                    maxWidth: 65,
+                    maxHeight: 64,
+                  ),
+                  child: Center(
+                    child: Text(
+                      device.legacyDevice[index].log!.length.toString(),
+                      style: TextStyle(fontSize: isTablet ? 20 : 14, fontWeight: FontWeight.w900),
+                    ),
+                  ),
+                ),
+                onTap: (() {
+                  Navigator.pushNamed(
+                    context,
+                    custom_route.Route.legacy,
+                    arguments: {'serial': device.legacyDevice[index].sn!, 'name': device.legacyDevice[index].name!},
+                  );
+                }),
+              );
+            },
+          );
         }
-        if (device.legacyDevice.isNotEmpty) ward = device.legacyDevice.first.ward!;
-        return ListView.separated(
-          itemCount: device.legacyDevice.length,
-          separatorBuilder: (BuildContext context, int index) => const Divider(
-            color: Colors.white12,
-            height: 4,
-            indent: 15,
-            endIndent: 15,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(
-                device.legacyDevice[index].name ?? "ไม่มีชื่อ",
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: isTablet ? 22 : 16,
-                ),
-              ),
-              tileColor: const Color.fromARGB(255, 165, 190, 202),
-              subtitle: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  const SizedBox(width: 2),
-                  Text(
-                    device.legacyDevice[index].sn!,
-                    style: TextStyle(fontSize: isTablet ? 20 : 14),
-                  ),
-                ],
-              ),
-              trailing: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                  maxWidth: 65,
-                  maxHeight: 64,
-                ),
-                child: Center(
-                  child: Text(
-                    device.legacyDevice[index].log!.length.toString(),
-                    style: TextStyle(fontSize: isTablet ? 20 : 14, fontWeight: FontWeight.w900),
-                  ),
-                ),
-              ),
-              onTap: (() {
-                Navigator.pushNamed(
-                  context,
-                  custom_route.Route.legacy,
-                  arguments: {'serial': device.legacyDevice[index].sn!, 'name': device.legacyDevice[index].name!},
-                );
-              }),
-            );
-          },
-        );
       },
     );
   }

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/color.dart';
 import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/services/services.dart';
+import 'package:temp_noti/src/widgets/device/config_btn.dart';
 import 'package:temp_noti/src/widgets/device/device_info.dart';
 import 'package:temp_noti/src/widgets/device/noti_info.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
-import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class DevicePage extends StatelessWidget {
@@ -42,20 +42,7 @@ class DevicePage extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    custom_route.Route.config,
-                    arguments: {'serial': arguments['serial']},
-                  );
-                },
-                icon: Icon(
-                  Icons.settings,
-                  size: isTablet ? 40 : 30,
-                  color: Colors.white60,
-                ),
-              ),
+              ConfigBtn(serial: arguments['serial'], isTablet: isTablet),
             ],
           ),
         ),

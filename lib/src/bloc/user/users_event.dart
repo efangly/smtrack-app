@@ -17,17 +17,7 @@ class SetUser extends UsersEvent {
   const SetUser(this.display, this.pic, this.role, this.id, this.username);
 
   @override
-  List<Object> get props => [display, pic, role, id];
-}
-
-class SetHospitalData extends UsersEvent {
-  final String hospitalId;
-  final String wardId;
-  final String wardType;
-  const SetHospitalData(this.hospitalId, this.wardId, this.wardType);
-
-  @override
-  List<Object> get props => [hospitalId, wardId, wardType];
+  List<Object> get props => [display, pic, role, id, username];
 }
 
 class SetWardData extends UsersEvent {
@@ -48,4 +38,10 @@ class SetError extends UsersEvent {
 
 class RemoveUser extends UsersEvent {}
 
-class LoadHospital extends UsersEvent {}
+class SetHospital extends UsersEvent {
+  final List<HospitalData> hospital;
+  const SetHospital(this.hospital);
+
+  @override
+  List<Object> get props => [hospital];
+}

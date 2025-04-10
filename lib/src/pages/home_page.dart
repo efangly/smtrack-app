@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
     final configStorage = ConfigStorage();
     bool isFirst = false;
     bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
-
+    context.read<DevicesBloc>().add(ClearDevices());
     return FutureBuilder<UserData?>(
       future: api.getUser(),
       builder: (context, snapshot) {
@@ -72,6 +72,26 @@ class HomePage extends StatelessWidget {
                     snapshot.data!.username!,
                   ),
                 );
+            if (snapshot.data!.role! == "USER" || snapshot.data!.role! == "GUEST") {
+              context.read<DevicesBloc>().add(GetDevices(snapshot.data!.wardId!));
+              context.read<DevicesBloc>().add(
+                    SetHospitalData(
+                      snapshot.data!.ward!.hosId!,
+                      snapshot.data!.wardId!,
+                      snapshot.data!.ward!.type!,
+                    ),
+                  );
+            }
+            if (snapshot.data!.role! == "LEGACY_USER") {
+              context.read<DevicesBloc>().add(GetLegacyDevices(snapshot.data!.wardId!));
+              context.read<DevicesBloc>().add(
+                    SetHospitalData(
+                      snapshot.data!.ward!.hosId!,
+                      snapshot.data!.wardId!,
+                      snapshot.data!.ward!.type!,
+                    ),
+                  );
+            }
             isFirst = true;
           }
 
@@ -86,16 +106,24 @@ class HomePage extends StatelessWidget {
                       children: [TitleName(isTablet: isTablet), MenuList(isTablet: isTablet)],
                     ),
                     const SizedBox(height: 8),
-                    const FilterBox()
+                    snapshot.data!.role! == "USER" || snapshot.data!.role! == "LEGACY_USER" || snapshot.data!.role! == "GUEST"
+                        ? const SizedBox(height: 0)
+                        : const FilterBox(),
                   ],
                 ),
               ),
             ),
-            body: BlocBuilder<UsersBloc, UsersState>(
-              builder: (context, user) {
+            body: BlocBuilder<DevicesBloc, DevicesState>(
+              builder: (context, state) {
                 return Container(
                   decoration: ConstColor.bgColor,
-                  child: user.wardType == "LEGACY" ? const MachineLegacy() : const MachineList(),
+                  child: state.wardType == ""
+                      ? snapshot.data!.ward!.type == "LEGACY"
+                          ? const MachineLegacy()
+                          : const MachineList()
+                      : state.wardType == "LEGACY"
+                          ? const MachineLegacy()
+                          : const MachineList(),
                 );
               },
             ),

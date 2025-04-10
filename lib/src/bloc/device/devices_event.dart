@@ -15,6 +15,16 @@ class GetDevices extends DevicesEvent {
   List<Object> get props => [ward];
 }
 
+class SetHospitalData extends DevicesEvent {
+  final String hospitalId;
+  final String wardId;
+  final String wardType;
+  const SetHospitalData(this.hospitalId, this.wardId, this.wardType);
+
+  @override
+  List<Object> get props => [hospitalId, wardId, wardType];
+}
+
 class GetLegacyDevices extends DevicesEvent {
   final String ward;
   const GetLegacyDevices(this.ward);

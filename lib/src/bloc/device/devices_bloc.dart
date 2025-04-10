@@ -15,11 +15,16 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     on<GetDevices>(_getDevices);
     on<GetLegacyDevices>(_getLegacyDevices);
     on<GetDeviceById>(_getDeviceById);
+    on<SetHospitalData>(_onSetHospitalData);
     on<ClearDevices>(_clearDevices);
     on<ClearDevice>(_clearDevice);
     on<DeviceError>((event, emit) {
       emit(state.copyWith(isError: event.error));
     });
+  }
+
+  void _onSetHospitalData(SetHospitalData event, Emitter<DevicesState> emit) {
+    emit(state.copyWith(hospitalId: event.hospitalId, wardId: event.wardId, wardType: event.wardType));
   }
 
   Future<void> _getDevices(event, emit) async {
@@ -53,7 +58,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
   }
 
   Future<void> _clearDevices(event, emit) async {
-    emit(state.copyWith(devices: []));
+    emit(state.copyWith(devices: [], legacyDevice: []));
   }
 
   Future<void> _clearDevice(event, emit) async {

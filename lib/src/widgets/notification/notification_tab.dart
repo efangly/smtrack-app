@@ -66,11 +66,17 @@ class _NotificationTabState extends State<NotificationTab> with SingleTickerProv
         final legacyWards = wards.where((ward) => ward.type == "LEGACY").toList();
         if (newWards.isNotEmpty && legacyWards.isNotEmpty) {
           tabLength = 2;
-          _tabController = TabController(length: 2, vsync: this);
+          tab.addAll([const Tab(text: 'eTEMP/iTemS'), const Tab(text: 'Line Notify')]);
+          tabView.addAll([
+            const SizedBox(child: NotificationList()),
+            const SizedBox(child: NotificationLegacy()),
+          ]);
         } else {
           if (newWards.isNotEmpty) {
+            tab.addAll([const Tab(text: 'eTEMP/iTemS')]);
             tabView.addAll([const SizedBox(child: NotificationList())]);
           } else {
+            tab.addAll([const Tab(text: 'Line Notify')]);
             tabView.addAll([const SizedBox(child: NotificationLegacy())]);
           }
         }

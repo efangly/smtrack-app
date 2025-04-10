@@ -84,18 +84,21 @@ class UserData {
 
 class WardInfo {
   String? wardName;
+  String? type;
   String? hosId;
 
-  WardInfo({this.wardName, this.hosId});
+  WardInfo({this.wardName, this.hosId, this.type});
 
   WardInfo.fromJson(Map<String, dynamic> json) {
     wardName = json['wardName'];
+    type = json['type'];
     hosId = json['hosId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['wardName'] = wardName;
+    data['type'] = type;
     data['hosId'] = hosId;
     return data;
   }
