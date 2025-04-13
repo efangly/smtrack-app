@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/notification/notifications_bloc.dart';
+import 'package:temp_noti/src/widgets/notification/subtitle_legacy.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class NotificationLegacy extends StatefulWidget {
@@ -21,7 +23,6 @@ class _NotificationLegacyState extends State<NotificationLegacy> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (context.mounted) context.read<NotificationsBloc>().add(GetLegacyNotifications());
     });
@@ -38,18 +39,15 @@ class _NotificationLegacyState extends State<NotificationLegacy> {
         },
         child: ListView.separated(
           itemCount: state.legacyNotifications.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white12, height: isTablet ? 3 : 1),
+          separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white12, height: Responsive.isTablet ? 3 : 1),
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               title: Text(
                 state.legacyNotifications[index].message ?? "-",
-                style: TextStyle(fontSize: isTablet ? 21 : 14),
+                style: TextStyle(fontSize: Responsive.isTablet ? 21 : 14),
               ),
               tileColor: const Color.fromARGB(255, 165, 190, 202),
-              subtitle: Text(
-                state.legacyNotifications[index].probe ?? "-",
-                style: TextStyle(fontSize: isTablet ? 18 : 12),
-              ),
+              subtitle: SubtitleLegacy(isTablet: Responsive.isTablet, notification: state.legacyNotifications[index]),
             );
           },
         ),

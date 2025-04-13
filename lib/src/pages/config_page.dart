@@ -5,6 +5,7 @@ import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/setting/probe_adj.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class ConfigPage extends StatefulWidget {
@@ -16,7 +17,6 @@ class ConfigPage extends StatefulWidget {
 
 class _ConfigPageState extends State<ConfigPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  bool isTablet = false;
   late final TextStyle tabTextStyle;
   final List<Widget> tab = [];
   final List<Widget> tabView = [];
@@ -25,8 +25,7 @@ class _ConfigPageState extends State<ConfigPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
-      if (isTablet) {
+      if (Responsive.isTablet) {
         tabTextStyle = const TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
       } else {
         tabTextStyle = const TextStyle(fontSize: 14, fontWeight: FontWeight.w600);
@@ -40,21 +39,21 @@ class _ConfigPageState extends State<ConfigPage> with SingleTickerProviderStateM
     final api = Api();
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(isTablet ? 80 : 70),
+          preferredSize: Size.fromHeight(Responsive.isTablet ? 80 : 70),
           child: CustomAppbar(
             titleInfo: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back, size: isTablet ? 40 : 30, color: Colors.white60),
+                  icon: Icon(Icons.arrow_back, size: Responsive.isTablet ? 40 : 30, color: Colors.white60),
                 ),
                 Text(
                   "ตั้งค่าโพรบ",
-                  style: TextStyle(fontSize: isTablet ? 25 : 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: Responsive.isTablet ? 25 : 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  width: isTablet ? 40 : 30,
+                  width: Responsive.isTablet ? 40 : 30,
                 ),
               ],
             ),
@@ -76,7 +75,7 @@ class _ConfigPageState extends State<ConfigPage> with SingleTickerProviderStateM
                 _tabController = TabController(length: snapshot.data!.probe!.length, vsync: this);
                 for (int i = 0; i < snapshot.data!.probe!.length; i++) {
                   tab.add(Tab(text: 'โพรบ ${snapshot.data!.probe![i].channel}'));
-                  tabView.add(ProbeAdj(probe: snapshot.data!.probe![i], isTablet: isTablet));
+                  tabView.add(ProbeAdj(probe: snapshot.data!.probe![i], isTablet: Responsive.isTablet));
                 }
                 return Column(
                   children: [

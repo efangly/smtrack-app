@@ -15,6 +15,7 @@ class DropdownHospital extends StatefulWidget {
 
 class _DropdownHospitalState extends State<DropdownHospital> {
   List<Ward> wards = [];
+
   @override
   Widget build(BuildContext context) {
     if (wards.isEmpty) {

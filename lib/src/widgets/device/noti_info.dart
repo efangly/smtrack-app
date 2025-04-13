@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
 import 'package:temp_noti/src/models/log.dart';
 import 'package:temp_noti/src/widgets/utils/convert.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 class NotificationInfo extends StatelessWidget {
   final String serial;
@@ -10,7 +11,6 @@ class NotificationInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
     return BlocBuilder<DevicesBloc, DevicesState>(
       builder: (context, state) {
         DeviceInfo device = state.devices.where((i) => i.serial == serial).toList().first;
@@ -26,7 +26,7 @@ class NotificationInfo extends StatelessWidget {
               tileColor: const Color.fromARGB(255, 165, 190, 202),
               subtitle: Text(
                   "${device.notification![index].createAt.toString().substring(0, 10)} | ${device.notification![index].createAt.toString().substring(11, 16)}"),
-              trailing: ConvertMessage.showIcon(device.notification![index].message ?? "-/-", isTablet ? 35 : 30),
+              trailing: ConvertMessage.showIcon(device.notification![index].message ?? "-/-", Responsive.isTablet ? 35 : 30),
             );
           },
         );

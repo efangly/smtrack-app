@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/notification/notifications_bloc.dart';
 import 'package:temp_noti/src/widgets/utils/convert.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class NotificationList extends StatefulWidget {
@@ -22,7 +23,6 @@ class _NotificationListState extends State<NotificationList> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (context.mounted) context.read<NotificationsBloc>().add(GetAllNotifications());
     });
@@ -39,29 +39,29 @@ class _NotificationListState extends State<NotificationList> {
         },
         child: ListView.separated(
           itemCount: state.notifications.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white12, height: isTablet ? 3 : 1),
+          separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.white12, height: Responsive.isTablet ? 3 : 1),
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              leading: ConvertMessage.showIcon(state.notifications[index].message ?? "-/-", isTablet ? 38 : 30),
+              leading: ConvertMessage.showIcon(state.notifications[index].message ?? "-/-", Responsive.isTablet ? 38 : 30),
               title: Text(
                 state.notifications[index].device!.name ?? "-",
-                style: TextStyle(fontSize: isTablet ? 21 : 14),
+                style: TextStyle(fontSize: Responsive.isTablet ? 21 : 14),
               ),
               tileColor: const Color.fromARGB(255, 165, 190, 202),
               subtitle: Text(
                 state.notifications[index].detail ?? "-",
-                style: TextStyle(fontSize: isTablet ? 18 : 12),
+                style: TextStyle(fontSize: Responsive.isTablet ? 18 : 12),
               ),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     state.notifications[index].createAt.toString().substring(11, 16),
-                    style: TextStyle(fontSize: isTablet ? 16 : 10),
+                    style: TextStyle(fontSize: Responsive.isTablet ? 16 : 10),
                   ),
                   Text(
                     state.notifications[index].createAt.toString().substring(0, 10),
-                    style: TextStyle(fontSize: isTablet ? 16 : 10),
+                    style: TextStyle(fontSize: Responsive.isTablet ? 16 : 10),
                   ),
                 ],
               ),

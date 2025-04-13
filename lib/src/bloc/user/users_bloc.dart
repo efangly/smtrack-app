@@ -2,29 +2,52 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/models/hospitals.dart';
+import 'package:temp_noti/src/services/api.dart';
+import 'package:temp_noti/src/configs/route.dart' as custom_route;
 
 part 'users_event.dart';
 part 'users_state.dart';
 
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
+  final api = Api();
   UsersBloc() : super(const UsersState()) {
     on<SetUser>(_onSetUser);
     on<RemoveUser>(_onRemoveUser);
-    on<SetWardData>(_onSetWardData);
     on<SetError>(_onSetError);
     on<SetHospital>(_onSetHospital);
   }
 
-  void _onSetUser(SetUser event, Emitter<UsersState> emit) {
-    emit(state.copyWith(display: event.display, pic: event.pic, role: event.role, id: event.id));
+  void _onSetUser(SetUser event, Emitter<UsersState> emit) async {
+    try {
+      final user = await api.getUser();
+      emit(state.copyWith(
+        display: user!.display,
+        pic: user.pic,
+        role: user.role,
+        id: user.id,
+        username: user.username,
+        ward: user.wardId,
+        hospitalId: user.ward!.hosId,
+        type: user.ward!.type,
+      ));
+    } on Exception {
+      custom_route.Route.navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (route) => false);
+    }
   }
 
   void _onRemoveUser(RemoveUser event, Emitter<UsersState> emit) {
-    emit(state.copyWith(display: '-', pic: URL.DEFAULT_PIC, role: 'GUEST', id: ''));
-  }
-
-  void _onSetWardData(SetWardData event, Emitter<UsersState> emit) {
-    emit(state.copyWith(wards: event.wards));
+    emit(state.copyWith(
+      display: '',
+      pic: URL.DEFAULT_PIC,
+      role: 'GUEST',
+      id: '',
+      username: '',
+      ward: '',
+      hospitalId: '',
+      type: '',
+      error: false,
+      hospital: [],
+    ));
   }
 
   void _onSetError(SetError event, Emitter<UsersState> emit) {
@@ -32,6 +55,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   }
 
   void _onSetHospital(SetHospital event, Emitter<UsersState> emit) async {
-    emit(state.copyWith(hospital: event.hospital));
+    final hospital = await api.getHospital();
+    emit(state.copyWith(hospital: hospital));
   }
 }

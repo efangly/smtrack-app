@@ -129,7 +129,10 @@ class Api {
   Future<UserData?> getUser() async {
     try {
       final userId = await _tokenStorage.getUserId();
-      final Response response = await _dio.get('/auth/user/${userId ?? ""}');
+      if (userId == null) {
+        throw Exception('Failed to get user data');
+      }
+      final Response response = await _dio.get('/auth/user/$userId');
       if (response.statusCode == 200 && response.data != null) {
         User user = User.fromJson(json.decode(jsonEncode(response.data)));
         return user.data!;
@@ -189,13 +192,8 @@ class Api {
 
   Future<bool> changPass(String userId, ChangePassword pass) async {
     try {
-      final Response response = await _dio.patch('/auth/reset/$userId', data: pass.toJson());
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return true;
-        // throw Exception('Failed to update password');
-      }
+      await _dio.patch('/auth/reset/$userId', data: {'password': pass.password, 'oldPassword': pass.oldPassword});
+      return true;
     } on DioException catch (error) {
       throw Exception(error);
     }

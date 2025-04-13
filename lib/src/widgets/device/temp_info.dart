@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +16,7 @@ class TempInfo extends StatefulWidget {
 
 class _TempInfoState extends State<TempInfo> {
   final client = MqttService();
+  Timer? _timer;
   double temp = 0.0;
   double humi = 0.0;
   @override
@@ -22,9 +25,15 @@ class _TempInfoState extends State<TempInfo> {
     client.connect().then((value) {
       if (value) {
         client.subscribe("${widget.devSerial}/temp/real");
+        client.subscribe("${widget.devSerial}/${widget.probe}/temp/real");
         client.publish("${widget.devSerial}/temp", "on");
         client.publish("siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/temp", "on");
         client.publish("siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/${widget.probe}/temp", "on");
+        _timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+          client.publish("${widget.devSerial}/temp", "on");
+          client.publish("siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/temp", "on");
+          client.publish("siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/${widget.probe}/temp", "on");
+        });
       }
     });
     client.messageStream.listen((event) {
@@ -39,10 +48,12 @@ class _TempInfoState extends State<TempInfo> {
 
   @override
   void dispose() {
+    _timer?.cancel();
     client.publish('${widget.devSerial}/temp', "off");
     client.publish('siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/temp', "off");
     client.publish("siamatic/${client.getDevice(widget.devSerial)}/${widget.devSerial}/${widget.probe}/temp", "off");
     client.unsubscribe("${widget.devSerial}/temp/real");
+    client.unsubscribe("${widget.devSerial}/${widget.probe}/temp/real");
     client.disconnect();
     super.dispose();
   }

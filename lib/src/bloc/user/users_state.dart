@@ -8,7 +8,9 @@ class UsersState extends Equatable {
   final String username;
   final bool error;
   final List<HospitalData> hospital;
-  final List<Ward> wards;
+  final String ward;
+  final String hospitalId;
+  final String type;
 
   const UsersState({
     this.display = "",
@@ -18,7 +20,9 @@ class UsersState extends Equatable {
     this.username = "",
     this.error = false,
     this.hospital = const [],
-    this.wards = const [],
+    this.ward = "",
+    this.hospitalId = "",
+    this.type = "",
   });
 
   UsersState copyWith({
@@ -29,7 +33,9 @@ class UsersState extends Equatable {
     String? username,
     bool? error,
     List<HospitalData>? hospital,
-    List<Ward>? wards,
+    String? ward,
+    String? hospitalId,
+    String? type,
   }) {
     return UsersState(
       display: display ?? this.display,
@@ -39,10 +45,12 @@ class UsersState extends Equatable {
       username: username ?? this.username,
       error: error ?? this.error,
       hospital: hospital ?? this.hospital,
-      wards: wards ?? this.wards,
+      ward: ward ?? this.ward,
+      hospitalId: hospitalId ?? this.hospitalId,
+      type: type ?? this.type,
     );
   }
 
   @override
-  List<Object> get props => [display, pic, role, id, username, error, hospital, wards];
+  List<Object> get props => [display, pic, role, id, username, error, hospital, ward, hospitalId, type];
 }

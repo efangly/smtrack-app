@@ -35,7 +35,6 @@ void main() async {
   final notificationBloc = BlocProvider<NotificationsBloc>(create: (context) => NotificationsBloc());
   final userBloc = BlocProvider<UsersBloc>(create: (context) => UsersBloc());
   FlutterNativeSplash.remove();
-
   runApp(MultiBlocProvider(
     providers: [deviceBloc, notificationBloc, userBloc],
     child: App(route: route),

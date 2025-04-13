@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/constants/style.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 class App extends StatelessWidget {
   const App({super.key, required this.route});
   final String? route;
   @override
   Widget build(BuildContext context) {
+    Responsive.init(context);
     return MaterialApp(
       navigatorKey: custom_route.Route.navigatorKey,
       scaffoldMessengerKey: custom_route.Route.scaffoldMessengerKey,

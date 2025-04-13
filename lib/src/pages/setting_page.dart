@@ -6,6 +6,7 @@ import 'package:temp_noti/src/constants/color.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/widgets/utils/preference.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -13,7 +14,6 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final configStorage = ConfigStorage();
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
     Future<void> logout() async {
       showDialog(
         context: context,
@@ -49,16 +49,16 @@ class SettingPage extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(isTablet ? 80 : 70),
+        preferredSize: Size.fromHeight(Responsive.isTablet ? 80 : 70),
         child: CustomAppbar(
           titleInfo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back, size: isTablet ? 40 : 30, color: Colors.white60),
+                icon: Icon(Icons.arrow_back, size: Responsive.isTablet ? 40 : 30, color: Colors.white60),
               ),
-              Text('ตั้งค่า', style: TextStyle(fontSize: isTablet ? 24 : 20, fontWeight: FontWeight.w900)),
+              Text('ตั้งค่า', style: TextStyle(fontSize: Responsive.isTablet ? 24 : 20, fontWeight: FontWeight.w900)),
               const SizedBox(width: 35),
             ],
           ),
@@ -80,15 +80,15 @@ class SettingPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.account_box_rounded, size: isTablet ? 36 : 26, color: Colors.white70),
+                          Icon(Icons.account_box_rounded, size: Responsive.isTablet ? 36 : 26, color: Colors.white70),
                           const SizedBox(width: 8),
                           Text(
                             'บัญชีผู้ใช้',
-                            style: TextStyle(fontSize: isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
+                            style: TextStyle(fontSize: Responsive.isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
                           ),
                         ],
                       ),
-                      Icon(Icons.arrow_forward_ios, size: isTablet ? 30 : 20, color: Colors.white70),
+                      Icon(Icons.arrow_forward_ios, size: Responsive.isTablet ? 30 : 20, color: Colors.white70),
                     ],
                   ),
                 ),
@@ -100,15 +100,15 @@ class SettingPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.privacy_tip_outlined, size: isTablet ? 36 : 26, color: Colors.white70),
+                          Icon(Icons.privacy_tip_outlined, size: Responsive.isTablet ? 36 : 26, color: Colors.white70),
                           const SizedBox(width: 8),
                           Text(
                             'นโยบายความเป็นส่วนตัว',
-                            style: TextStyle(fontSize: isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
+                            style: TextStyle(fontSize: Responsive.isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
                           ),
                         ],
                       ),
-                      Icon(Icons.arrow_forward_ios, size: isTablet ? 30 : 20, color: Colors.white70),
+                      Icon(Icons.arrow_forward_ios, size: Responsive.isTablet ? 30 : 20, color: Colors.white70),
                     ],
                   ),
                 ),
@@ -120,19 +120,19 @@ class SettingPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, size: isTablet ? 36 : 26, color: Colors.white70),
+                          Icon(Icons.info_outline, size: Responsive.isTablet ? 36 : 26, color: Colors.white70),
                           const SizedBox(width: 8),
                           Text(
                             'ข้อกำหนดและเงื่อนไข',
-                            style: TextStyle(fontSize: isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
+                            style: TextStyle(fontSize: Responsive.isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.white70),
                           ),
                         ],
                       ),
-                      Icon(Icons.arrow_forward_ios, size: isTablet ? 30 : 20, color: Colors.white70),
+                      Icon(Icons.arrow_forward_ios, size: Responsive.isTablet ? 30 : 20, color: Colors.white70),
                     ],
                   ),
                 ),
-                SizedBox(height: isTablet ? 50 : 30),
+                SizedBox(height: Responsive.isTablet ? 50 : 30),
                 TextButton(
                   onPressed: () => logout(),
                   child: Row(
@@ -140,15 +140,15 @@ class SettingPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.logout_outlined, size: isTablet ? 36 : 26, color: Colors.red[600]),
+                          Icon(Icons.logout_outlined, size: Responsive.isTablet ? 36 : 26, color: Colors.red[600]),
                           const SizedBox(width: 8),
                           Text(
                             'ออกจากระบบ',
-                            style: TextStyle(fontSize: isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.red[600]),
+                            style: TextStyle(fontSize: Responsive.isTablet ? 24 : 18, fontWeight: FontWeight.bold, color: Colors.red[600]),
                           ),
                         ],
                       ),
-                      Icon(Icons.arrow_forward_ios, size: isTablet ? 30 : 20, color: Colors.red[600]),
+                      Icon(Icons.arrow_forward_ios, size: Responsive.isTablet ? 30 : 20, color: Colors.red[600]),
                     ],
                   ),
                 ),

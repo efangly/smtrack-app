@@ -29,14 +29,16 @@ class LegacyNotification {
 
 class LegacyNotificationList {
   String? createdAt;
+  LegacyDevice? device;
   String? mcuId;
   String? message;
   String? probe;
 
-  LegacyNotificationList({this.createdAt, this.mcuId, this.message, this.probe});
+  LegacyNotificationList({this.createdAt, this.mcuId, this.message, this.probe, this.device});
 
   LegacyNotificationList.fromJson(Map<String, dynamic> json) {
     createdAt = json['createdAt'];
+    device = json['device'] != null ? LegacyDevice.fromJson(json['device']) : null;
     mcuId = json['mcuId'];
     message = json['message'];
     probe = json['probe'];
@@ -45,9 +47,34 @@ class LegacyNotificationList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['createdAt'] = createdAt;
+    if (device != null) {
+      data['device'] = device!.toJson();
+    }
     data['mcuId'] = mcuId;
     data['message'] = message;
     data['probe'] = probe;
+    return data;
+  }
+}
+
+class LegacyDevice {
+  String? hospitalName;
+  String? name;
+  String? wardName;
+
+  LegacyDevice({this.hospitalName, this.name, this.wardName});
+
+  LegacyDevice.fromJson(Map<String, dynamic> json) {
+    hospitalName = json['hospitalName'];
+    name = json['name'];
+    wardName = json['wardName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['hospitalName'] = hospitalName;
+    data['name'] = name;
+    data['wardName'] = wardName;
     return data;
   }
 }

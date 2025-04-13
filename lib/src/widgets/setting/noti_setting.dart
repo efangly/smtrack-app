@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/constants/timer.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 typedef ReturnToNormalVal = void Function(bool normalMsg);
 typedef NotificationVal = void Function(bool notificationMsg);
@@ -32,8 +33,7 @@ class NotiSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
-    TextStyle style = TextStyle(fontSize: isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
+    TextStyle style = TextStyle(fontSize: Responsive.isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
     return Column(
       children: [
         Row(
@@ -41,15 +41,15 @@ class NotiSetting extends StatelessWidget {
             Icon(
               Icons.notifications,
               color: Colors.white70,
-              size: isTablet ? 38 : 28,
+              size: Responsive.isTablet ? 38 : 28,
             ),
             Text(
               "ตั้งค่าการแจ้งเตือน",
-              style: TextStyle(fontSize: isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: Responsive.isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -64,7 +64,7 @@ class NotiSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -79,7 +79,7 @@ class NotiSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -104,17 +104,17 @@ class NotiSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(" แจ้งเตือนซ้ำ", style: style),
             SizedBox(
-              width: isTablet ? 100 : 85,
+              width: Responsive.isTablet ? 100 : 85,
               height: 40,
               child: DropdownMenu(
                 initialSelection: repeat.toString(),
-                width: isTablet ? 100 : 90,
+                width: Responsive.isTablet ? 100 : 90,
                 inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                 menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                 onSelected: (String? value) => onRepeat(value!),

@@ -1,10 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
-import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/login/input.dart';
@@ -33,19 +30,10 @@ class _LoginFormState extends State<LoginForm> {
     isLogin = true;
     setState(() => loginBtnText = "กำลังเข้าสู่ระบบ");
     try {
-      final user = await api.checkLogin(usernameController.text, passwordController.text);
+      await api.checkLogin(usernameController.text, passwordController.text);
       isLogin = false;
       setState(() {
         loginBtnText = "ลงชื่อเข้าใช้";
-        context.read<UsersBloc>().add(
-              SetUser(
-                user.data!.name ?? "-",
-                user.data!.pic ?? URL.DEFAULT_PIC,
-                user.data!.role ?? "GUEST",
-                user.data!.id ?? "",
-                usernameController.text,
-              ),
-            );
         usernameController.clear();
         passwordController.clear();
         Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.home, (route) => false);

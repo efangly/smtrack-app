@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class MachineLegacy extends StatefulWidget {
@@ -34,7 +35,6 @@ class _MachineLegacyState extends State<MachineLegacy> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     return BlocBuilder<DevicesBloc, DevicesState>(
       builder: (context, device) {
         ward = device.wardId;
@@ -59,7 +59,7 @@ class _MachineLegacyState extends State<MachineLegacy> {
                   device.legacyDevice[index].name ?? "ไม่มีชื่อ",
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: isTablet ? 22 : 16,
+                    fontSize: Responsive.isTablet ? 22 : 16,
                   ),
                 ),
                 tileColor: const Color.fromARGB(255, 165, 190, 202),
@@ -69,7 +69,7 @@ class _MachineLegacyState extends State<MachineLegacy> {
                     const SizedBox(width: 2),
                     Text(
                       device.legacyDevice[index].sn!,
-                      style: TextStyle(fontSize: isTablet ? 20 : 14),
+                      style: TextStyle(fontSize: Responsive.isTablet ? 20 : 14),
                     ),
                   ],
                 ),
@@ -83,7 +83,7 @@ class _MachineLegacyState extends State<MachineLegacy> {
                   child: Center(
                     child: Text(
                       device.legacyDevice[index].log!.length.toString(),
-                      style: TextStyle(fontSize: isTablet ? 20 : 14, fontWeight: FontWeight.w900),
+                      style: TextStyle(fontSize: Responsive.isTablet ? 20 : 14, fontWeight: FontWeight.w900),
                     ),
                   ),
                 ),

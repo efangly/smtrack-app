@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/color.dart';
 import 'package:temp_noti/src/widgets/utils/appbar.dart';
 import 'package:temp_noti/src/widgets/utils/preference.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 class NotiSettingPage extends StatefulWidget {
   const NotiSettingPage({super.key});
@@ -33,24 +34,23 @@ class _NotiSettingPageState extends State<NotiSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
-    TextStyle style = TextStyle(fontSize: isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
+    TextStyle style = TextStyle(fontSize: Responsive.isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(isTablet ? 80 : 70),
+        preferredSize: Size.fromHeight(Responsive.isTablet ? 80 : 70),
         child: CustomAppbar(
           titleInfo: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back, size: isTablet ? 40 : 30, color: Colors.white60),
+                icon: Icon(Icons.arrow_back, size: Responsive.isTablet ? 40 : 30, color: Colors.white60),
               ),
               Text(
                 "ตั้งค่าการแจ้งเตือน",
-                style: TextStyle(fontSize: isTablet ? 25 : 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: Responsive.isTablet ? 25 : 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: isTablet ? 40 : 30),
+              SizedBox(width: Responsive.isTablet ? 40 : 30),
             ],
           ),
         ),

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
 import 'package:temp_noti/src/constants/color.dart';
-import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/constants/style.dart';
-import 'package:temp_noti/src/models/users.dart';
-import 'package:temp_noti/src/services/services.dart';
 import 'package:temp_noti/src/widgets/home/filter.dart';
 import 'package:temp_noti/src/widgets/home/machine_legacy.dart';
 import 'package:temp_noti/src/widgets/home/menu.dart';
@@ -15,84 +13,46 @@ import 'package:temp_noti/src/widgets/home/machine_list.dart';
 import 'package:temp_noti/src/widgets/home/title.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/widgets/utils/preference.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
+import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final api = Api();
-    final configStorage = ConfigStorage();
-    bool isFirst = false;
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final configStorage = ConfigStorage();
+
+  @override
+  void initState() {
+    super.initState();
     context.read<DevicesBloc>().add(ClearDevices());
-    return FutureBuilder<UserData?>(
-      future: api.getUser(),
+    context.read<UsersBloc>().add(SetUser());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UsersBloc, UsersState>(
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Container(
-              decoration: ConstColor.bgColor,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("เกิดข้อผิดพลาดในการเชื่อมต่อ", style: TextStyle(color: Colors.white70, fontSize: 20)),
-                    const SizedBox(height: 10),
-                    const Text("กรุณาล๊อคอินใหม่อีกครั้ง", style: TextStyle(color: Colors.white70, fontSize: 18)),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      style: TextButton.styleFrom(backgroundColor: Colors.white60),
-                      child: const Text('ตกลง', style: TextStyle(color: Colors.black)),
-                      onPressed: () {
-                        configStorage.clearTokens();
-                        context.read<UsersBloc>().add(RemoveUser());
-                        context.read<DevicesBloc>().add(ClearDevices());
-                        Navigator.pushNamedAndRemoveUntil(context, custom_route.Route.login, (route) => false);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+        if (snapshot.error) {
+          ShowSnackbar.snackbar(ContentType.success, "เกิดข้อผิดพลาดในการเชื่อมต่อ", "กรุณาล๊อคอินใหม่อีกครั้ง");
+          configStorage.clearTokens();
+          custom_route.Route.navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (route) => false);
         }
-        if (snapshot.hasData) {
-          Size size = Size.fromHeight(MediaQuery.of(context).size.width > 720 ? 125 : 160);
-          if (snapshot.data!.role! == "USER" || snapshot.data!.role! == "LEGACY_USER" || snapshot.data!.role! == "GUEST") {
+        if (snapshot.username != "") {
+          Size size = Size.fromHeight(Responsive.isTablet ? 125 : 160);
+          if (snapshot.role == "USER" || snapshot.role == "GUEST") {
             size = const Size.fromHeight(70);
+            context.read<DevicesBloc>().add(GetDevices(snapshot.ward));
+            context.read<DevicesBloc>().add(SetHospitalData(snapshot.hospitalId, snapshot.ward, snapshot.type));
           }
-          if (!isFirst) {
-            context.read<UsersBloc>().add(
-                  SetUser(
-                    snapshot.data!.display!,
-                    snapshot.data!.pic ?? URL.DEFAULT_PIC,
-                    snapshot.data!.role!,
-                    snapshot.data!.id!,
-                    snapshot.data!.username!,
-                  ),
-                );
-            if (snapshot.data!.role! == "USER" || snapshot.data!.role! == "GUEST") {
-              context.read<DevicesBloc>().add(GetDevices(snapshot.data!.wardId!));
-              context.read<DevicesBloc>().add(
-                    SetHospitalData(
-                      snapshot.data!.ward!.hosId!,
-                      snapshot.data!.wardId!,
-                      snapshot.data!.ward!.type!,
-                    ),
-                  );
-            }
-            if (snapshot.data!.role! == "LEGACY_USER") {
-              context.read<DevicesBloc>().add(GetLegacyDevices(snapshot.data!.wardId!));
-              context.read<DevicesBloc>().add(
-                    SetHospitalData(
-                      snapshot.data!.ward!.hosId!,
-                      snapshot.data!.wardId!,
-                      snapshot.data!.ward!.type!,
-                    ),
-                  );
-            }
-            isFirst = true;
+          if (snapshot.role == "LEGACY_USER") {
+            size = const Size.fromHeight(70);
+            context.read<DevicesBloc>().add(GetLegacyDevices(snapshot.ward));
+            context.read<DevicesBloc>().add(SetHospitalData(snapshot.hospitalId, snapshot.ward, snapshot.type));
           }
 
           return Scaffold(
@@ -103,12 +63,12 @@ class HomePage extends StatelessWidget {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [TitleName(isTablet: isTablet), MenuList(isTablet: isTablet)],
+                      children: [TitleName(isTablet: Responsive.isTablet), MenuList(isTablet: Responsive.isTablet)],
                     ),
                     const SizedBox(height: 8),
-                    snapshot.data!.role! == "USER" || snapshot.data!.role! == "LEGACY_USER" || snapshot.data!.role! == "GUEST"
+                    snapshot.role == "USER" || snapshot.role == "LEGACY_USER" || snapshot.role == "GUEST"
                         ? const SizedBox(height: 0)
-                        : const FilterBox(),
+                        : FilterBox(isTablet: Responsive.isTablet),
                   ],
                 ),
               ),
@@ -118,7 +78,7 @@ class HomePage extends StatelessWidget {
                 return Container(
                   decoration: ConstColor.bgColor,
                   child: state.wardType == ""
-                      ? snapshot.data!.ward!.type == "LEGACY"
+                      ? snapshot.type == "LEGACY"
                           ? const MachineLegacy()
                           : const MachineList()
                       : state.wardType == "LEGACY"

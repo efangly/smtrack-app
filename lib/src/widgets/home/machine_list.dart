@@ -6,6 +6,7 @@ import 'package:temp_noti/src/bloc/device/devices_bloc.dart';
 import 'package:temp_noti/src/configs/route.dart' as custom_route;
 import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/widgets/home/subtitle_list.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
 
 class MachineList extends StatefulWidget {
@@ -35,7 +36,6 @@ class _MachineListState extends State<MachineList> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 700 ? true : false;
     return BlocBuilder<DevicesBloc, DevicesState>(
       builder: (context, device) {
         ward = device.wardId;
@@ -60,23 +60,23 @@ class _MachineListState extends State<MachineList> {
                   device.devices[index].name ?? "ไม่มีชื่อ",
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: isTablet ? 22 : 16,
+                    fontSize: Responsive.isTablet ? 22 : 16,
                   ),
                 ),
                 tileColor: const Color.fromARGB(255, 165, 190, 202),
                 subtitle: SubtitleList(deviceInfo: device.devices[index]),
                 trailing: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minWidth: isTablet ? 100 : 44,
-                    minHeight: isTablet ? 100 : 44,
-                    maxWidth: isTablet ? 100 : 65,
-                    maxHeight: isTablet ? 400 : 64,
+                    minWidth: Responsive.isTablet ? 100 : 44,
+                    minHeight: Responsive.isTablet ? 100 : 44,
+                    maxWidth: Responsive.isTablet ? 100 : 65,
+                    maxHeight: Responsive.isTablet ? 400 : 64,
                   ),
                   child: Image.network(
                     device.devices[index].positionPic ?? URL.DEFAULT_PIC,
                     fit: BoxFit.fill,
-                    width: isTablet ? 200 : 55,
-                    height: isTablet ? 400 : 200,
+                    width: Responsive.isTablet ? 200 : 55,
+                    height: Responsive.isTablet ? 400 : 200,
                   ),
                 ),
                 onTap: (() {

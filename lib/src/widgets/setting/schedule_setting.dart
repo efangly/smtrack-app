@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:temp_noti/src/constants/style.dart';
 import 'package:temp_noti/src/constants/timer.dart';
+import 'package:temp_noti/src/widgets/utils/responsive.dart';
 
 typedef FirstDayFunc = void Function(String day);
 typedef SecondDayFunc = void Function(String day);
@@ -58,21 +59,20 @@ class ScheduleSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet = MediaQuery.of(context).size.width > 720 ? true : false;
     bool isAllDay = firstDay == "ALL" && secondDay == "ALL" && thirdDay == "ALL" ? true : false;
     List<String> firstDays = Timer.day.where((d) => d != secondDay && d != thirdDay || d == "OFF").toList();
     List<String> secondDays = Timer.day.where((d) => d != firstDay && d != thirdDay || d == "OFF").toList();
     List<String> thirdDays = Timer.day.where((d) => d != firstDay && d != secondDay || d == "OFF").toList();
-    TextStyle style = TextStyle(fontSize: isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
+    TextStyle style = TextStyle(fontSize: Responsive.isTablet ? 24 : 18, color: Colors.white70, fontWeight: FontWeight.bold);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(Icons.schedule, color: Colors.white70, size: isTablet ? 38 : 28),
+            Icon(Icons.schedule, color: Colors.white70, size: Responsive.isTablet ? 38 : 28),
             Text(
               " ตั้งค่าเวลาแจ้งรีพอร์ต",
-              style: TextStyle(fontSize: isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: Responsive.isTablet ? 26 : 20, color: Colors.white70, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -118,7 +118,7 @@ class ScheduleSetting extends StatelessWidget {
                 DropdownMenu(
                   enabled: !isAllDay,
                   initialSelection: firstDay,
-                  width: isTablet ? 110 : 100,
+                  width: Responsive.isTablet ? 110 : 100,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onFirstDay(value!),
@@ -132,7 +132,7 @@ class ScheduleSetting extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: isTablet ? 15 : 10),
+            SizedBox(height: Responsive.isTablet ? 15 : 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -141,7 +141,7 @@ class ScheduleSetting extends StatelessWidget {
                 DropdownMenu(
                   enabled: !isAllDay,
                   initialSelection: secondDay,
-                  width: isTablet ? 110 : 100,
+                  width: Responsive.isTablet ? 110 : 100,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onSecondDay(value!),
@@ -155,7 +155,7 @@ class ScheduleSetting extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: isTablet ? 15 : 10),
+            SizedBox(height: Responsive.isTablet ? 15 : 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -164,7 +164,7 @@ class ScheduleSetting extends StatelessWidget {
                 DropdownMenu(
                   enabled: !isAllDay,
                   initialSelection: thirdDay,
-                  width: isTablet ? 110 : 100,
+                  width: Responsive.isTablet ? 110 : 100,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onThirdDay(value!),
@@ -180,9 +180,9 @@ class ScheduleSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Text("เวลา", style: style),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -191,7 +191,7 @@ class ScheduleSetting extends StatelessWidget {
               children: [
                 DropdownMenu(
                   initialSelection: firstHour,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   menuHeight: MediaQuery.of(context).size.height * 0.5,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
@@ -207,7 +207,7 @@ class ScheduleSetting extends StatelessWidget {
                 const Text(" : ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                 DropdownMenu(
                   initialSelection: firstMin,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onFirstMinute(value!),
@@ -223,7 +223,7 @@ class ScheduleSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -232,7 +232,7 @@ class ScheduleSetting extends StatelessWidget {
               children: [
                 DropdownMenu(
                   initialSelection: secondHour,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   menuHeight: MediaQuery.of(context).size.height * 0.5,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
@@ -248,7 +248,7 @@ class ScheduleSetting extends StatelessWidget {
                 const Text(" : ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                 DropdownMenu(
                   initialSelection: secondMin,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onSecondMinute(value!),
@@ -264,7 +264,7 @@ class ScheduleSetting extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: isTablet ? 15 : 10),
+        SizedBox(height: Responsive.isTablet ? 15 : 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -273,7 +273,7 @@ class ScheduleSetting extends StatelessWidget {
               children: [
                 DropdownMenu(
                   initialSelection: thirdHour,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   menuHeight: MediaQuery.of(context).size.height * 0.5,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
@@ -289,7 +289,7 @@ class ScheduleSetting extends StatelessWidget {
                 const Text(" : ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                 DropdownMenu(
                   initialSelection: thirdMin,
-                  width: isTablet ? 94 : 83,
+                  width: Responsive.isTablet ? 94 : 83,
                   inputDecorationTheme: TextInputStyle.inputDecorationStyle,
                   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.blue)),
                   onSelected: (String? value) => onThirdMinute(value!),
