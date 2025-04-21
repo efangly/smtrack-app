@@ -8,6 +8,7 @@ import 'package:temp_noti/src/configs/url.dart';
 import 'package:temp_noti/src/widgets/home/subtitle_list.dart';
 import 'package:temp_noti/src/widgets/utils/responsive.dart';
 import 'package:temp_noti/src/widgets/utils/snackbar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MachineList extends StatefulWidget {
   const MachineList({super.key});
@@ -72,8 +73,10 @@ class _MachineListState extends State<MachineList> {
                     maxWidth: Responsive.isTablet ? 100 : 65,
                     maxHeight: Responsive.isTablet ? 400 : 64,
                   ),
-                  child: Image.network(
-                    device.devices[index].positionPic ?? URL.DEFAULT_PIC,
+                  child: CachedNetworkImage(
+                    imageUrl: device.devices[index].positionPic ?? URL.DEFAULT_PIC,
+                    placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white70),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                     fit: BoxFit.fill,
                     width: Responsive.isTablet ? 200 : 55,
                     height: Responsive.isTablet ? 400 : 200,

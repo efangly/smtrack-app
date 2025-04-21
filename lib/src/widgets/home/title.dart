@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temp_noti/src/bloc/user/users_bloc.dart';
@@ -22,9 +23,11 @@ class TitleName extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: SizedBox.fromSize(
                   size: Size.fromRadius(isTablet ? 28 : 18),
-                  child: Image.network(
-                    state.pic,
-                    fit: BoxFit.cover,
+                  child: CachedNetworkImage(
+                    imageUrl: state.pic,
+                    placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white70),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    fit: BoxFit.fill,
                     height: 50,
                     scale: 0.7,
                   ),
